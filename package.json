@@ -1,0 +1,15 @@
+{
+  "name": "304Project",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": {},
+  "license": "MIT",
+  "scripts": {
+    "start": "node ./index.js"
+  },
+  "dependencies": {
+    "oracledb": "^1.12.2"
+  }
+}
+
+
