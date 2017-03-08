@@ -1,7 +1,5 @@
-'use strict';
-
 var oracledb = require('oracledb');
-var dbConfig = require( '../../config.js');
+import dbConfig from '../../config';
 
 
 class queryEngine {

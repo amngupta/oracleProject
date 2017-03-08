@@ -1,9 +1,9 @@
-'use strict';
+import express from 'express';
+import morgan from 'morgan';
+import path from 'path';
+import queryEngine from './queryEngine/init';
 
-const express = require('express');
-const morgan = require('morgan');
-const path = require('path');
-const queryEngine = require('./queryEngine/init')
+
 const app = express();
 
 // Setup logger
