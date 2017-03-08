@@ -1,15 +1,21 @@
 {
-  "name": "304Project",
-  "version": "1.0.0",
-  "main": "index.js",
-  "repository": {},
-  "license": "MIT",
-  "scripts": {
-    "start": "node ./index.js"
-  },
+  "name": "304project",
+  "version": "0.1.0",
+  "private": true,
   "dependencies": {
-    "oracledb": "^1.12.2"
+    "oracledb": "^1.12.2",
+    "react": "^15.4.2",
+    "react-dom": "^15.4.2",
+    "react-router": "^3.0.2"
+  },
+  "devDependencies": {
+    "react-scripts": "0.9.4"
+  },
+  "scripts": {
+    "test-oracle": "node ./index.js",
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
   }
 }
-
-
