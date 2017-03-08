@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
-// import queryEngine from '../queryEngine/init'
+// import { queryEngine } from '../queryEngine/init'
 export default class App extends Component {
   render() {
 
