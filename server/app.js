@@ -3,7 +3,7 @@
 const express = require('express');
 const morgan = require('morgan');
 const path = require('path');
-
+const queryEngine = require('./queryEngine/init')
 const app = express();
 
 // Setup logger
@@ -16,5 +16,7 @@ app.use(express.static(path.resolve(__dirname, '..', 'build')));
 app.get('*', (req, res) => {
     res.sendFile(path.resolve(__dirname, '..', 'build', 'index.html'));
 });
+
+console.log(new queryEngine());
 
 module.exports = app;
