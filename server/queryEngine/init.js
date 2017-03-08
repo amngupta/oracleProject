@@ -1,6 +1,8 @@
 'use strict';
 
 var oracledb = require('oracledb');
+var dbConfig = require( '../../config.js');
+
 
 class queryEngine {
 
@@ -14,9 +16,9 @@ class queryEngine {
         let connection;
         // Get a non-pooled connection
         oracledb.getConnection({
-            user: "ora_t0d1b",
-            password: "a70746169",
-            connectString: "localhost:1522/ug"
+            user: dbConfig.user,
+            password: dbConfig.password,
+            connectString: dbConfig.connecturl
         })
             .then(conn => {
                 connection = conn;
