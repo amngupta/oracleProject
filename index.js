@@ -1,12 +1,15 @@
 var oracledb = require('oracledb');
 var dbConfig = require('./config.json');
 
+// export LD_LIBRARY_PATH=/opt/oracle/instantclient:$LD_LIBRARY_PATH
+// ssh -l t0d1b -L localhost:1522:dbhost.ugrad.cs.ubc.ca:1522 remote.ugrad.cs.ubc.ca
+
 // Get a non-pooled connection
 oracledb.getConnection(
   {
-    user          : "t0d1b",
-    password      : "password?",
-    connectString : "dbhost.ugrad.cs.ubc.ca:1521:ug"
+    user          : "ora_t0d1b",
+    password      : "a70746169",
+    connectString : "localhost:1522/ug"
   },
   function(err, connection)
   {
@@ -16,12 +19,10 @@ oracledb.getConnection(
     }
     connection.execute(
       // The statement to execute
-      "SELECT department_id, department_name " +
-        "FROM departments " +
-        "WHERE department_id = :id",
+      "select pub_name from publishers where state in ('CA','IN','MD')",
 
       // The "bind value" 180 for the "bind variable" :id
-      [180],
+      // [180],
 
       // Optional execute options argument, such as the query result format
       // or whether to get extra metadata
