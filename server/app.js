@@ -12,11 +12,15 @@ app.use(morgan(':remote-addr - :remote-user [:date[clf]] ":method :url HTTP/:htt
 // Serve static assets
 app.use(express.static(path.resolve(__dirname, '..', 'build')));
 
+app.get('/query', (req, res) => {
+    console.log(new queryEngine());
+    console.log(req.query);
+    res.send('hello world from query engine');
+});
+
 // Always return the main index.html, so react-router render the route in the client
 app.get('*', (req, res) => {
     res.sendFile(path.resolve(__dirname, '..', 'build', 'index.html'));
 });
-
-console.log(new queryEngine());
 
 module.exports = app;
