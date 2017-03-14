@@ -13,9 +13,14 @@ app.use(morgan(':remote-addr - :remote-user [:date[clf]] ":method :url HTTP/:htt
 app.use(express.static(path.resolve(__dirname, '..', 'build')));
 
 app.get('/query', (req, res) => {
-    console.log(new queryEngine());
-    console.log(req.query);
-    res.send('hello world from query engine');
+    let qE = new queryEngine();
+    qE.init()
+        .then(response => {
+            // console.log(response);
+            res.send(response);
+        });
+    // console.log(req.query);
+
 });
 
 // Always return the main index.html, so react-router render the route in the client
