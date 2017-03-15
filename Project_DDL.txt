@@ -1,0 +1,155 @@
+
+drop table ExpenditureWorker;
+drop table ExpenditureManager;
+drop table ProjectWorkers;
+
+drop table ProjectBudget;
+drop table ProjectPresident;
+drop table ProjectManager;
+drop table Budget;
+drop table Project;
+
+drop table Expenditure;
+drop table Employee;
+drop table Manager;
+drop table President;
+drop table Worker;
+
+
+CREATE TABLE Worker (
+	ID			NUMBER,
+	Name		VARCHAR2(25),
+	PhoneNumber	VARCHAR2(13),
+	PRIMARY KEY (ID),
+	UNIQUE (PhoneNumber)
+);
+
+INSERT INTO Worker VALUES (1, 'Jack Sparrow', '113-555-8789');
+INSERT INTO Worker VALUES (2, 'Daisy Duck', '457-898-4545');
+INSERT INTO Worker VALUES (3, 'Huey Duck', '457-898-4546');
+INSERT INTO Worker VALUES (4, 'Dewey Duck', '457-898-4547');
+INSERT INTO Worker VALUES (5, 'Louie Duck', '457-898-4548');
+INSERT INTO Worker VALUES (10, 'Minnie Mouse', '125-556-9899');
+INSERT INTO Worker VALUES (11, 'Daffy Duck', '554-657-5656');
+INSERT INTO Worker VALUES (12, 'Lightning McQueen', '113-555-8788');
+INSERT INTO Worker VALUES (13, 'Buzz Lightyear', '554-657-5626');
+INSERT INTO Worker VALUES (14, 'Sponge Bob', '656-987-9566');
+INSERT INTO Worker VALUES (20, 'Mickey Mouse', '656-987-2567'); 
+INSERT INTO Worker VALUES (21, 'Launchpad McQuack', '554-677-5656');
+INSERT INTO Worker VALUES (22, 'Gyro Gearloose', '656-287-2566');
+INSERT INTO Worker VALUES (23, 'Doofus Drake', '589-657-5656');
+INSERT INTO Worker VALUES (24, 'Patrick Star', '666-987-2566');
+
+CREATE TABLE President (
+	pres_ID	NUMBER,
+	PRIMARY KEY (pres_ID),
+	FOREIGN KEY (pres_ID) REFERENCES Worker
+	ON DELETE CASCADE
+);
+
+INSERT INTO President VALUES (1);
+INSERT INTO President VALUES (2);
+
+CREATE TABLE Manager (
+	man_ID	NUMBER,
+	pres_ID	NUMBER NOT NULL,
+	PRIMARY KEY (man_ID),
+	FOREIGN KEY (man_ID) REFERENCES Worker ON DELETE CASCADE,
+	FOREIGN KEY (pres_ID) REFERENCES President ON DELETE CASCADE
+);
+
+INSERT INTO Manager VALUES (10, 1);
+INSERT INTO Manager VALUES (11, 1);
+INSERT INTO Manager VALUES (12, 2);
+INSERT INTO Manager VALUES (13, 2);
+
+CREATE TABLE Employee (
+	emp_ID	NUMBER,
+	man_ID	NUMBER NOT NULL,
+	PRIMARY KEY (emp_ID),
+	FOREIGN KEY (emp_ID) REFERENCES Worker ON DELETE CASCADE,
+	FOREIGN KEY (man_ID) REFERENCES Manager ON DELETE CASCADE
+);
+
+INSERT INTO Employee VALUES (20, 10);
+INSERT INTO Employee VALUES (21, 11);
+INSERT INTO Employee VALUES (22, 11);
+INSERT INTO Employee VALUES (23, 12);
+INSERT INTO Employee VALUES (24, 13);
+
+CREATE TABLE Budget (
+	BID		NUMBER,
+	TotalAmount	NUMBER,
+	PRIMARY KEY (BID)
+);
+
+CREATE TABLE Project (
+	PID		NUMBER,
+	Name		CHAR(20),
+	Description	VARCHAR2(1000),
+	/* add attribute Budget NUMBER, */
+	PRIMARY KEY (PID)
+);
+
+CREATE TABLE ProjectBudget (
+	PID		NUMBER,
+	BID		NUMBER NOT NULL,
+	Description	VARCHAR2(1000),
+	PRIMARY KEY (PID),
+	FOREIGN KEY (BID) REFERENCES Budget ON DELETE CASCADE,
+	FOREIGN KEY (PID) REFERENCES President ON DELETE CASCADE 
+);
+
+
+CREATE TABLE ProjectPresident (
+	PID		NUMBER,
+	pres_ID	NUMBER NOT NULL,
+	PRIMARY KEY (PID),
+	FOREIGN KEY (pres_ID) REFERENCES President ON DELETE CASCADE,
+	FOREIGN KEY (PID) REFERENCES Project ON DELETE CASCADE
+);
+
+CREATE TABLE ProjectManager (
+	PID		NUMBER,
+	man_ID	NUMBER NOT NULL,
+	PRIMARY KEY (PID),
+	FOREIGN KEY (man_ID) REFERENCES Manager ON DELETE CASCADE,
+	FOREIGN KEY (PID) REFERENCES Project ON DELETE CASCADE
+);
+
+CREATE TABLE Expenditure (
+	EID		NUMBER,
+	Type		VARCHAR2(100),
+	Description	VARCHAR2(1000),
+	Expenditure_Date		Timestamp,
+	Amount	NUMBER,
+	PRIMARY KEY (EID)
+);
+
+CREATE TABLE ExpenditureManager (
+	EID		NUMBER,
+	ID		NUMBER NOT NULL,
+	PID		NUMBER NOT NULL,
+	PRIMARY KEY(EID),
+	FOREIGN KEY(EID) REFERENCES Expenditure ON DELETE CASCADE,
+	FOREIGN KEY(PID) REFERENCES ProjectManager ON DELETE CASCADE,
+	FOREIGN KEY(ID) REFERENCES Manager ON DELETE CASCADE
+);
+
+
+CREATE TABLE ProjectWorkers (
+	emp_ID	NUMBER,
+	PID		NUMBER,
+	PRIMARY KEY (emp_ID, PID),
+	FOREIGN KEY (emp_ID) REFERENCES Employee ON DELETE CASCADE,
+	FOREIGN KEY (PID) REFERENCES Project ON DELETE CASCADE
+);
+
+CREATE TABLE ExpenditureWorker (
+	EID			NUMBER,
+	ID			NUMBER NOT NULL,
+	PID			NUMBER NOT NULL,
+	PRIMARY KEY (EID),
+	FOREIGN KEY (EID) REFERENCES Expenditure ON DELETE CASCADE,
+	FOREIGN KEY (ID, PID) REFERENCES ProjectWorkers ON DELETE CASCADE
+);
