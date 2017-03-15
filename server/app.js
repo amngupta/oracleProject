@@ -1,7 +1,7 @@
 import express from 'express';
 import morgan from 'morgan';
 import path from 'path';
-import queryEngine from './queryEngine/init';
+import queryEngine from './queryEngine/queryEngine';
 
 
 const app = express();
@@ -12,12 +12,14 @@ app.use(morgan(':remote-addr - :remote-user [:date[clf]] ":method :url HTTP/:htt
 // Serve static assets
 app.use(express.static(path.resolve(__dirname, '..', 'build')));
 
-app.get('/query', (req, res) => {
+app.get('/query/:request', (req, res) => {
     let qE = new queryEngine();
-    qE.init()
+    qE.performQuery(req.params.request)
         .then(response => {
-            // console.log(response);
-            res.send(response);
+            res.status(200).send(response);
+        })
+        .catch(err => {
+            res.status(400).send(err);
         });
     // console.log(req.query);
 

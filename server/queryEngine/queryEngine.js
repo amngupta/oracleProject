@@ -7,12 +7,9 @@ class queryEngine {
     // export LD_LIBRARY_PATH=/opt/oracle/instantclient:$LD_LIBRARY_PATH
     // ssh -l t0d1b -L localhost:1522:dbhost.ugrad.cs.ubc.ca:1522 remote.ugrad.cs.ubc.ca
 
-    // constructor() {
-    //     this.init();
-    // }
-    init() {
-
+    performQuery(request) {
         let connection;
+        // console.log("Reached init", request);
         // Get a non-pooled connection
         return new Promise((fulfill, reject) => {
             oracledb.getConnection({
@@ -23,8 +20,7 @@ class queryEngine {
                 .then(conn => {
                     connection = conn;
                     return conn.execute(
-                        // The statement to execute
-                        "select pub_name from publishers where state in ('CA','IN','MD')"
+                        request
                     );
                 })
                 .then(result => {
@@ -32,7 +28,7 @@ class queryEngine {
                     fulfill(result);
                 })
                 .catch(err => {
-                    // console.log(err);
+                    console.log(err);
                     this.close(connection);
                     reject(err);
                 })
