@@ -19,9 +19,7 @@ class queryEngine {
             })
                 .then(conn => {
                     connection = conn;
-                    return conn.execute(
-                        request
-                    );
+                    return conn.execute(request, [], { outFormat: oracledb.OBJECT });
                 })
                 .then(result => {
                     this.close(connection);
