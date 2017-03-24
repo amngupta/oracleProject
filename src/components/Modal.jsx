@@ -33,7 +33,7 @@ export default class ModalOpen extends Component {
                     {eventListener}
                 </div>
 
-                <Modal show={this.state.showModal} onHide={this.close}>
+                <Modal show={this.state.showModal} bsSize="large" onHide={this.close}>
                     <Modal.Header closeButton>
                         <Modal.Title>
                             {modalHeader}

@@ -4,7 +4,7 @@ import { Grid, Row, Col, ListGroup, ControlLabel, FormControl, Button, ListGroup
 
 import JsonTable from 'react-json-table';
 import ModalOpen from '../Modal'
-import NewProjectForm from './newProjectForm'
+import NewWorkerForm from './newWorkerForm'
 
 
 
@@ -16,6 +16,8 @@ export default class ViewWorkers extends Component {
             errors: {},
             rows: []
         };
+        this.onClickRow = this.onClickRow.bind(this);
+        this.doQuery = this.doQuery.bind(this);
     }
 
     componentWillMount() {
@@ -36,11 +38,14 @@ export default class ViewWorkers extends Component {
                     columns.push(mD.name);
                 })
                 self.setState({
-                    rows: body.rows, columnNames: columns
+                    rows: [{ name: "Aman", test: "Here" }]
                 });
             })
             .catch(function (err) {
                 // API call failed... 
+                self.setState({
+                    rows: [{ name: "Aman", test: "Here" }]
+                });
                 console.error(err);
             });
     }
@@ -107,9 +112,13 @@ export default class ViewWorkers extends Component {
             });
     }
 
+    onClickRow(event, data) {
+        console.log(data);
+    }
+
     render() {
         const button = (<Button bsStyle="success">Add New Worker </Button>)
-        const newProjectForm = <NewProjectForm />
+        const newWorkerForm = <NewWorkerForm />
         const formBody = (
             <div>
                 <form className="form-horizontal" onSubmit={this.doQuery}>
@@ -170,14 +179,14 @@ export default class ViewWorkers extends Component {
                     <Col xs={10}>
                         {formBody}
                     </Col>
-                    <Col xs={2} className="text-left">
-                        <ModalOpen eventListener={button} modalBody={newProjectForm} />
+                    <Col xs={2}>
+                        <ModalOpen eventListener={button} modalBody={newWorkerForm} />
                     </Col>
                 </Row>
                 <Row>
                     <Col xs={12}>
                         <div className="table-responsive">
-                            <JsonTable className="table" rows={this.state.rows} />
+                            <JsonTable className="table" rows={this.state.rows} onClickRow={this.onClickRow} />
                         </div>
                     </Col>
                 </Row>
