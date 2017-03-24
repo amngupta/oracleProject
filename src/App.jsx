@@ -2,17 +2,17 @@ import React, { Component } from 'react';
 import './App.css';
 import { Col, Grid, Row } from 'react-bootstrap';
 import QueryBox from './components/QueryBox'
-import Header from './components/Header'
-export default class App extends Component {
+
+export default class AppContainer extends Component {
 
   render() {
-
+    const {children} = this.props;
     return (
       <Grid fluid={true}>
         <Row>
           <div className="App">
-            <Header />
             <Col xs={12}>
+              {children}
               <QueryBox />
             </Col>
           </div>
@@ -21,3 +21,11 @@ export default class App extends Component {
     );
   }
 }
+
+AppContainer.propTypes = {
+  children: React.PropTypes.node,
+}
+
+AppContainer.contextTypes = {
+  router: React.PropTypes.object.isRequired
+};

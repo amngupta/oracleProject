@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 let request = require('request-promise-native');
 import { Button, Col, Grid } from 'react-bootstrap';
-import Table from 'rc-table';
+import JsonTable from 'react-json-table';
 
 export default class QueryBox extends Component {
 
@@ -9,28 +9,7 @@ export default class QueryBox extends Component {
         super(props);
         this.state = {
             errors: {},
-            rows: [{
-                "key": 1,
-                "NAME": "Jack Sparrow",
-                "PHONENUMBER": "113-555-8789"
-                },
-                {
-                    "key": 2,
-                    "NAME": "Daisy Duck",
-                    "PHONENUMBER": "457-898-4545"
-                },
-                {
-                    "key": 3,
-                    "NAME": "Huey Duck",
-                    "PHONENUMBER": "457-898-4546"
-                }],
-            columnNames: [{
-                title: 'Name', dataIndex: 'NAME', key: 'name'
-                }, {
-                    title: 'Phone', dataIndex: 'PHONENUMBER', key: 'age'
-                }, {
-                    title: 'Apeartions', dataIndex: '', key: 'opeartions', render: () => <a href="#">Delete</a>,
-                }]
+            rows: []
         };
         this.doQuery = this.doQuery.bind(this);
     }
@@ -79,7 +58,9 @@ export default class QueryBox extends Component {
             </Button>
                 </Col>
                 <Col xs={12}>
-                    <Table data={this.state.rows} columns={this.state.columnNames} />
+                    <div className="table-responsive">
+                        <JsonTable className="table" rows={this.state.rows} />
+                    </div>
                 </Col>
             </Grid>
         );
