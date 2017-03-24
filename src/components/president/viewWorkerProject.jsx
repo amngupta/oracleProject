@@ -1,14 +1,13 @@
 import React, { Component } from 'react';
 let request = require('request-promise-native');
 import { Grid, Row, Col, ListGroup, ControlLabel, FormControl, Button, ListGroupItem, FormGroup, Checkbox } from 'react-bootstrap';
-
 import JsonTable from 'react-json-table';
 import ModalOpen from '../Modal'
-import NewWorkerForm from './newWorkerForm'
+import NewProjectForm from './newProjectForm'
 
 
 
-export default class ViewWorkers extends Component {
+export default class ViewWorkerProject extends Component {
 
     constructor(props) {
         super(props);
@@ -16,12 +15,11 @@ export default class ViewWorkers extends Component {
             errors: {},
             rows: []
         };
-        this.onClickRow = this.onClickRow.bind(this);
         this.doQuery = this.doQuery.bind(this);
     }
 
     componentWillMount() {
-        let query = "SELECT * from WORKER"
+        let query = "SELECT * from Worker"
         let options = {
             uri: 'http://localhost:9000/query/' + encodeURI(query),
             headers: {
@@ -38,7 +36,7 @@ export default class ViewWorkers extends Component {
                     columns.push(mD.name);
                 })
                 self.setState({
-                    rows: body.rows
+                    rows: body.rows, columnNames: columns
                 });
             })
             .catch(function (err) {
@@ -47,12 +45,10 @@ export default class ViewWorkers extends Component {
             });
     }
 
+
     doQuery() {
-        let table = this.wtype.value;
-        let id = this.wid.value || null;
-        let name = this.wname.value || null;
-        let phone = this.wphone.value || null;
-        let filter = "id LIKE '%'"
+        let id = this.pid.value || null;
+        let workerType = this.wtype.value || null;
         // switch (tableChoice) {
         //     case worker:
         //         table = "";
@@ -109,13 +105,8 @@ export default class ViewWorkers extends Component {
             });
     }
 
-    onClickRow(event, data) {
-        console.log(data);
-    }
 
     render() {
-        const button = (<Button bsStyle="success">Add New Worker </Button>)
-        const newWorkerForm = <NewWorkerForm />
         const formBody = (
             <div>
                 <form className="form-horizontal" onSubmit={this.doQuery}>
@@ -124,39 +115,23 @@ export default class ViewWorkers extends Component {
                             <ListGroupItem>
                                 <div className="row">
                                     <div className="form-group col-sm-6">
-                                        <label className="control-label text-semibold col-sm-4 col-md-3">Worker Id</label>
+                                        <label className="control-label text-semibold col-sm-4 col-md-3">Project Id</label>
                                         <div className="col-sm-8 col-md-9">
-                                            <input type='number' name='name' ref={ref => this.wid = ref} placeholder='Worker Id' className="form-control" />
-                                        </div>
-                                    </div>
-                                    <div className="form-group col-sm-6">
-                                        <label className="control-label text-semibold col-sm-4 col-md-3">Full Name</label>
-                                        <div className="col-sm-8 col-md-9">
-                                            <input type='text' name='name' ref={ref => this.wname = ref} placeholder='Project Name' className="form-control" />
-                                        </div>
-                                    </div>
-                                    <div className="form-group col-sm-6">
-                                        <label className="control-label text-semibold col-sm-4 col-md-3">Phone Number</label>
-                                        <div className="col-sm-8 col-md-9">
-                                            <input type='text' name='name' ref={ref => this.wphone = ref} placeholder='Number' className="form-control" />
+                                            <input type='number' name='name' ref={ref => this.pid = ref} placeholder='Project Id' className="form-control" />
                                         </div>
                                     </div>
                                     <div className="form-group col-sm-6">
                                         <ControlLabel className="col-sm-4 col-md-3">Type</ControlLabel>
                                         <div className="col-sm-8 col-md-9">
                                             <FormControl componentClass="select" inline inputRef={ref => this.wtype = ref} placeholder="select">
-                                                <option value="worker">ALL</option>
+                                                <option value="worker">--</option>
                                                 <option value="president">President</option>
                                                 <option value="manager">Manager</option>
                                                 <option value="employee">Employee</option>
                                             </FormControl>
                                         </div>
                                     </div>
-                                </div>
-                            </ListGroupItem>
-                            <ListGroupItem>
-                                <div className="row">
-                                    <div className="row">
+                                    <div className="form-group col-sm-12">
                                         <div className="form-group col-sm-12">
                                             <div className=" col-xs-12 text-center">
                                                 <input type="submit" className="btn btn-success" />
@@ -173,11 +148,8 @@ export default class ViewWorkers extends Component {
         return (
             <Grid fluid={true}>
                 <Row>
-                    <Col xs={10}>
+                    <Col xs={12}>
                         {formBody}
-                    </Col>
-                    <Col xs={2}>
-                        <ModalOpen eventListener={button} modalBody={newWorkerForm} />
                     </Col>
                 </Row>
                 <Row>
@@ -188,6 +160,6 @@ export default class ViewWorkers extends Component {
                     </Col>
                 </Row>
             </Grid>
-        );
+        )
     }
 }

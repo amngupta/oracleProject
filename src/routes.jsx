@@ -9,6 +9,9 @@ import AppContainer from './App';
 import { Nav, Navbar, NavItem, NavDropdown, MenuItem } from 'react-bootstrap';
 import ViewProjects from './components/president/viewProjects';
 import ViewWorkers from './components/president/viewWorkers';
+import ViewWorkerProjects from './components/president/viewWorkerProject';
+
+
 const Routes = (
     <Router>
         <div>
@@ -26,6 +29,7 @@ const Routes = (
                         <NavDropdown eventKey={1} title="President" id="basic-nav-dropdown">
                             <MenuItem eventKey={1.1}><NavLink to="/president/project">Project</NavLink></MenuItem>
                             <MenuItem eventKey={1.2}><NavLink to="/president/workers">Workers</NavLink></MenuItem>
+                            <MenuItem eventKey={1.2}><NavLink to="/president/workerProjects">Employee Projects</NavLink></MenuItem>
                         </NavDropdown>
                         <NavDropdown eventKey={2} title="Manager" id="basic-nav-dropdown">
                             <MenuItem eventKey={2.1}><NavLink to="rooms">Rooms Explorer</NavLink></MenuItem>
@@ -41,6 +45,7 @@ const Routes = (
             <Route exact path="/" component={AppContainer} />
             <Route path="/president/project" component={ViewProjects} />
             <Route path="/president/workers" component={ViewWorkers} />
+            <Route path="/president/workerProjects" component={ViewWorkerProjects} />
         </div>
     </Router>
 );
