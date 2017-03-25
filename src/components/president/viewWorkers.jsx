@@ -16,12 +16,12 @@ export default class ViewWorkers extends Component {
             errors: {},
             rows: []
         };
-        this.onClickRow = this.onClickRow.bind(this);
+        ViewWorkers.onClickRow = ViewWorkers.onClickRow.bind(this);
         this.doQuery = this.doQuery.bind(this);
     }
 
     componentWillMount() {
-        let query = "SELECT * from WORKER"
+        let query = "SELECT * from WORKER";
         let options = {
             uri: 'http://localhost:9000/query/' + encodeURI(query),
             headers: {
@@ -36,7 +36,7 @@ export default class ViewWorkers extends Component {
                 let columns = [];
                 body.metaData.forEach((mD) => {
                     columns.push(mD.name);
-                })
+                });
                 self.setState({
                     rows: body.rows
                 });
@@ -49,41 +49,34 @@ export default class ViewWorkers extends Component {
 
     doQuery() {
         let table = this.wtype.value;
+        let table_id;
+        switch (table) {
+            case "worker":
+                table = "";
+                table_id = "w.id";
+                break;
+            case "employee":
+                table = ", employee e";
+                table_id = "e.emp_id";
+                break;
+            case "manager":
+                table = ", manager m";
+                table_id = "m.man_id";
+                break;
+            case "president":
+                table = ", president p";
+                table_id = "p.pres_id";
+                break;
+        }
+        let filter = [];
         let id = this.wid.value || null;
         let name = this.wname.value || null;
         let phone = this.wphone.value || null;
-        let filter = "id LIKE '%'"
-        // switch (tableChoice) {
-        //     case worker:
-        //         table = "";
-        //         id = "w.id";
-        //         break;
-        //     case employee:
-        //         table = ", employee e";
-        //         id = "e.emp_id"
-        //         break;
-        //     case manager:
-        //         table = ", manager m";
-        //         id = "m.man_id";
-        //         break;
-        //     case president:
-        //         table = ", president p";
-        //         id = "p.pres_id";
-        //         break;
-        // }
-        // switch (filterChoice) {
-        //     case id:
-        //         filter = "id='" + input + "'"
-        //         break;
-        //     case name:
-        //         filter = "name='" + input + "'"
-        //         break;
-        //     case phonenumber:
-        //         filter = "phonenumber='" + input + "'"
-        //         break;
-        // }
-        // let query = "SELECT DISTINCT w.id, w.name, w.phonenumber FROM worker w" + table + " WHERE w." + filter + " AND w.id=" + id;
-        let query = {};
+        if (id) { filter.push("w.id=" + id); }
+        if (name) { filter.push("LOWER(w.name) LIKE '%" + name + "%'"); }
+        if (phone) { filter.push("w.phonenumber LIKE '%" + phone + "%'"); }
+        let query = "SELECT * FROM worker w" + table + " WHERE w.id=" + table_id;
+        if (filter.length !== 0) { query += " AND " + filter.join(" AND "); }
         let self = this;
         let options = {
             uri: 'http://localhost:9000/query/' + encodeURI(query),
@@ -98,7 +91,7 @@ export default class ViewWorkers extends Component {
                 let columns = [];
                 body.metaData.forEach((mD) => {
                     columns.push(mD.name);
-                })
+                });
                 self.setState({
                     rows: body.rows, columnNames: columns
                 });
@@ -109,13 +102,13 @@ export default class ViewWorkers extends Component {
             });
     }
 
-    onClickRow(event, data) {
+    static onClickRow(event, data) {
         console.log(data);
     }
 
     render() {
-        const button = (<Button bsStyle="success">Add New Worker </Button>)
-        const newWorkerForm = <NewWorkerForm />
+        const button = (<Button bsStyle="success">Add New Worker </Button>);
+        const newWorkerForm = <NewWorkerForm />;
         const formBody = (
             <div>
                 <form className="form-horizontal" onSubmit={this.doQuery}>
@@ -126,13 +119,13 @@ export default class ViewWorkers extends Component {
                                     <div className="form-group col-sm-6">
                                         <label className="control-label text-semibold col-sm-4 col-md-3">Worker Id</label>
                                         <div className="col-sm-8 col-md-9">
-                                            <input type='number' name='name' ref={ref => this.wid = ref} placeholder='Worker Id' className="form-control" />
+                                            <input type='number' name='wid' ref={ref => this.wid = ref} placeholder='Worker Id' className="form-control" />
                                         </div>
                                     </div>
                                     <div className="form-group col-sm-6">
                                         <label className="control-label text-semibold col-sm-4 col-md-3">Full Name</label>
                                         <div className="col-sm-8 col-md-9">
-                                            <input type='text' name='name' ref={ref => this.wname = ref} placeholder='Project Name' className="form-control" />
+                                            <input type='text' name='wname' ref={ref => this.wname = ref} placeholder='Full Name' className="form-control" />
                                         </div>
                                     </div>
                                     <div className="form-group col-sm-6">
@@ -160,6 +153,7 @@ export default class ViewWorkers extends Component {
                                         <div className="form-group col-sm-12">
                                             <div className=" col-xs-12 text-center">
                                                 <input type="submit" className="btn btn-success" />
+                                                <Button bsStyle="success" onClick={this.doQuery}>Search</Button>
                                             </div>
                                         </div>
                                     </div>
@@ -169,7 +163,7 @@ export default class ViewWorkers extends Component {
                     </fieldset>
                 </form>
             </div>
-        )
+        );
         return (
             <Grid fluid={true}>
                 <Row>
