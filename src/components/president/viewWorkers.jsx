@@ -47,7 +47,8 @@ export default class ViewWorkers extends Component {
             });
     }
 
-    doQuery() {
+    doQuery(e) {
+        e.preventDefault();
         let table = this.wtype.value;
         let table_id;
         switch (table) {
@@ -152,8 +153,7 @@ export default class ViewWorkers extends Component {
                                     <div className="row">
                                         <div className="form-group col-sm-12">
                                             <div className=" col-xs-12 text-center">
-                                                <input type="submit" className="btn btn-success" />
-                                                <Button bsStyle="success" onClick={this.doQuery}>Search</Button>
+                                                <input type="submit" className="btn btn-success" value="Search" />
                                             </div>
                                         </div>
                                     </div>
