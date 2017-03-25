@@ -144,7 +144,7 @@ export default class ViewWorkers extends Component {
                                     <div className="form-group col-sm-6">
                                         <ControlLabel className="col-sm-4 col-md-3">Type</ControlLabel>
                                         <div className="col-sm-8 col-md-9">
-                                            <FormControl componentClass="select" inline inputRef={ref => this.wtype = ref} placeholder="select">
+                                            <FormControl componentClass="select" inputRef={ref => this.wtype = ref} placeholder="select">
                                                 <option value="worker">ALL</option>
                                                 <option value="president">President</option>
                                                 <option value="manager">Manager</option>
