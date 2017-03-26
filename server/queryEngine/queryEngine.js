@@ -1,4 +1,5 @@
 var oracledb = require('oracledb');
+oracledb.autoCommit = true;
 import dbConfig from '../../config';
 
 
