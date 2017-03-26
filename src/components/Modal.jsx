@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Row, Modal, Button, Col, FormControl, FormGroup } from 'react-bootstrap';
+import { Modal } from 'react-bootstrap';
 
 export default class ModalOpen extends Component {
     constructor(props) {
@@ -26,7 +26,7 @@ export default class ModalOpen extends Component {
 
     render() {
 
-        let {modalBody, modalHeader, eventListener, modalFooter} = this.props;
+        let {modalBody, modalHeader, eventListener} = this.props;
         return (
             <div>
                 <div onClick={this.open} >

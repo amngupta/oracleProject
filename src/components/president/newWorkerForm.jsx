@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 let request = require('request-promise-native');
-import { Grid, Row, Col, ListGroup, ControlLabel, FormControl, Button, ListGroupItem, FormGroup, Checkbox } from 'react-bootstrap';
-import JsonTable from 'react-json-table';
+import { ListGroup, ControlLabel, FormControl, ListGroupItem } from 'react-bootstrap';
 
 export default class NewWorkerForm extends Component {
 
@@ -17,7 +16,6 @@ export default class NewWorkerForm extends Component {
 
     doQuery(e) {
         e.preventDefault();
-        let self = this;
         let table = this.wtype.value;
         let name = this.wname.value || null;
         if (name === null) { return; }
@@ -53,6 +51,8 @@ export default class NewWorkerForm extends Component {
                                 break;
                             case "president":
                                 query = "INSERT INTO president VALUES (" + maxID + ")";
+                                break;
+                            default:
                                 break;
                         }
                         let options = {

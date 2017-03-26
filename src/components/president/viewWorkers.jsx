@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 let request = require('request-promise-native');
-import { Grid, Row, Col, ListGroup, ControlLabel, FormControl, Button, ListGroupItem, FormGroup, Checkbox } from 'react-bootstrap';
+import { Grid, Row, Col, ListGroup, ControlLabel, FormControl, Button, ListGroupItem } from 'react-bootstrap';
 
 import JsonTable from 'react-json-table';
 import ModalOpen from '../Modal'
@@ -33,10 +33,6 @@ export default class ViewWorkers extends Component {
         request(options)
             .then(function (body) {
                 console.log(body);
-                let columns = [];
-                body.metaData.forEach((mD) => {
-                    columns.push(mD.name);
-                });
                 self.setState({
                     rows: body.rows
                 });
@@ -68,13 +64,15 @@ export default class ViewWorkers extends Component {
                 table = ", president p";
                 table_id = "p.pres_id";
                 break;
+            default:
+                break;
         }
         let filter = [];
         let id = this.wid.value || null;
         let name = this.wname.value || null;
         let phone = this.wphone.value || null;
         if (id) { filter.push("w.id=" + id); }
-        if (name) { filter.push("LOWER(w.name) LIKE '%" + name + "%'"); }
+        if (name) { filter.push("LOWER(w.name) LIKE LOWER('%" + name + "%')"); }
         if (phone) { filter.push("w.phonenumber LIKE '%" + phone + "%'"); }
         let query = "SELECT * FROM worker w" + table + " WHERE w.id=" + table_id;
         if (filter.length !== 0) { query += " AND " + filter.join(" AND "); }
@@ -89,12 +87,8 @@ export default class ViewWorkers extends Component {
         request(options)
             .then(function (body) {
                 console.log(body);
-                let columns = [];
-                body.metaData.forEach((mD) => {
-                    columns.push(mD.name);
-                });
                 self.setState({
-                    rows: body.rows, columnNames: columns
+                    rows: body.rows
                 });
             })
             .catch(function (err) {
@@ -132,7 +126,7 @@ export default class ViewWorkers extends Component {
                                     <div className="form-group col-sm-6">
                                         <label className="control-label text-semibold col-sm-4 col-md-3">Phone Number</label>
                                         <div className="col-sm-8 col-md-9">
-                                            <input type='text' name='name' ref={ref => this.wphone = ref} placeholder='Number' className="form-control" />
+                                            <input type='text' name='name' ref={ref => this.wphone = ref} placeholder='Phone Number' className="form-control" />
                                         </div>
                                     </div>
                                     <div className="form-group col-sm-6">

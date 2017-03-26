@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 let request = require('request-promise-native');
-import { Grid, Col, ListGroup, Button, ListGroupItem, FormGroup, Checkbox } from 'react-bootstrap';
-import JsonTable from 'react-json-table';
+import { ListGroup, ListGroupItem } from 'react-bootstrap';
 
 export default class NewProjectForm extends Component {
 
@@ -16,7 +15,6 @@ export default class NewProjectForm extends Component {
 
 
     doQuery() {
-        let self = this;
         let id = parseInt(this.pid.value);
         let name = this.pname.value;
         let description = this.pdescription.value;
