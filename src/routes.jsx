@@ -6,7 +6,7 @@ import {
 } from 'react-router-dom'
 import AppContainer from './App';
 // import createBrowserHistory from 'history/createBrowserHistory'
-import { Nav, Navbar, NavItem, NavDropdown, MenuItem } from 'react-bootstrap';
+import { Nav, Navbar, NavDropdown, MenuItem } from 'react-bootstrap';
 import ViewProjects from './components/president/viewProjects';
 import ViewWorkers from './components/president/viewWorkers';
 import ViewWorkerProjects from './components/president/viewWorkerProject';
