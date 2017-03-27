@@ -11,6 +11,7 @@ import ViewProjects from './components/president/viewProjects';
 import ViewWorkers from './components/president/viewWorkers';
 import ViewWorkerProjects from './components/president/viewWorkerProject';
 import ViewExpenditures from './components/manager/viewExpenditure';
+import NewExpenditureForm from './components/employee/newExpenditureForm';
 
 
 const Routes = (
@@ -36,8 +37,7 @@ const Routes = (
                             <MenuItem eventKey={2.1}><NavLink to="/manager/expenditure">Expenditure Reports</NavLink></MenuItem>
                         </NavDropdown>
                         <NavDropdown eventKey={3} title="Employee" id="basic-nav-dropdown">
-                            <MenuItem eventKey={3.1}><NavLink to="rooms">Rooms Explorer</NavLink></MenuItem>
-                            <MenuItem eventKey={3.2}><NavLink to="scheduler">Rooms Scheduling</NavLink></MenuItem>
+                            <MenuItem eventKey={3.1}><NavLink to="/employee/add-expenditure">Add Expenditure</NavLink></MenuItem>
                         </NavDropdown>
                     </Nav>
                 </Navbar.Collapse>
@@ -47,6 +47,7 @@ const Routes = (
             <Route path="/president/workers" component={ViewWorkers} />
             <Route path="/president/workerProjects" component={ViewWorkerProjects} />
             <Route path="/manager/expenditure" component={ViewExpenditures} />
+            <Route path="/employee/add-expenditure" component={NewExpenditureForm} />
         </div>
     </Router>
 );

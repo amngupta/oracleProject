@@ -4,7 +4,7 @@ import { Grid, Row, Col, Modal, ListGroup, ControlLabel, FormControl, Button, Li
 import JsonTable from 'react-json-table';
 import ModalOpen from '../Modal';
 import Moment from 'react-moment';
-
+import NewExpenditureForm from '../employee/newExpenditureForm';
 export default class ViewExpenditures extends Component {
 
     constructor(props) {
@@ -140,6 +140,9 @@ export default class ViewExpenditures extends Component {
             }, "AMOUNT"
         ];
 
+        const button = (<Button bsStyle="success">Add New Expenditure </Button>);
+        const newExpenditure = <NewExpenditureForm />;
+
         const formBody = (
             <div>
                 <form className="form-horizontal" onSubmit={this.doQuery}>
@@ -183,8 +186,11 @@ export default class ViewExpenditures extends Component {
         return (
             <Grid fluid={true}>
                 <Row>
-                    <Col xs={12}>
+                     <Col xs={10}>
                         {formBody}
+                    </Col>
+                    <Col xs={2}>
+                        <ModalOpen eventListener={button} modalBody={newExpenditure} />
                     </Col>
                 </Row>
                 <Row>
