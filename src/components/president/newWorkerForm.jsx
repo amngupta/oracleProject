@@ -18,9 +18,8 @@ export default class NewWorkerForm extends Component {
         e.preventDefault();
         let table = this.wtype.value;
         let name = this.wname.value || null;
-        if (name === null) { return; }
         let phone = this.wphone.value || null;
-        if (phone === null) { return; }
+        if (name === null || phone === null) { return; }
         let query = "SELECT MAX(w.id) FROM worker w";
         let options = {
             uri: 'http://localhost:9000/query/' + encodeURI(query),
