@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 let request = require('request-promise-native');
-import { Grid, Row, Col, ListGroup, ControlLabel, FormControl, Button, ListGroupItem } from 'react-bootstrap';
+import { Grid, Row, Modal, Col, ListGroup, ControlLabel, FormControl, Button, ListGroupItem } from 'react-bootstrap';
 
 import JsonTable from 'react-json-table';
 import ModalOpen from '../Modal'
@@ -14,9 +14,12 @@ export default class ViewWorkers extends Component {
         super(props);
         this.state = {
             errors: {},
-            rows: []
+            rows: [],
+            showModal: false
         };
-        ViewWorkers.onClickRow = ViewWorkers.onClickRow.bind(this);
+        this.close = this.close.bind(this);
+        this.open = this.open.bind(this);
+        this.onClickRow = this.onClickRow.bind(this);
         this.doQuery = this.doQuery.bind(this);
     }
 
@@ -115,8 +118,19 @@ export default class ViewWorkers extends Component {
             });
     }
 
-    static onClickRow(event, data) {
+    close() {
+        this.setState({ showModal: false });
+    }
+
+    open() {
+        this.setState({ showModal: true });
+    }
+
+    onClickRow(e, data) {
+        console.log(e);
         console.log(data);
+        this.open();
+        this.setState({ modalData: data });
     }
 
     render() {
@@ -134,7 +148,7 @@ export default class ViewWorkers extends Component {
                                             Id</label>
                                         <div className="col-sm-8 col-md-9">
                                             <input type='number' name='wid' ref={ref => this.wid = ref}
-                                                   placeholder='Worker Id' className="form-control"/>
+                                                placeholder='Worker Id' className="form-control" />
                                         </div>
                                     </div>
                                     <div className="form-group col-sm-6">
@@ -142,7 +156,7 @@ export default class ViewWorkers extends Component {
                                             Name</label>
                                         <div className="col-sm-8 col-md-9">
                                             <input type='text' name='wname' ref={ref => this.wname = ref}
-                                                   placeholder='Full Name' className="form-control"/>
+                                                placeholder='Full Name' className="form-control" />
                                         </div>
                                     </div>
                                     <div className="form-group col-sm-6">
@@ -150,14 +164,14 @@ export default class ViewWorkers extends Component {
                                             Number</label>
                                         <div className="col-sm-8 col-md-9">
                                             <input type='text' name='name' ref={ref => this.wphone = ref}
-                                                   placeholder='Phone Number' className="form-control"/>
+                                                placeholder='Phone Number' className="form-control" />
                                         </div>
                                     </div>
                                     <div className="form-group col-sm-6">
                                         <ControlLabel className="col-sm-4 col-md-3">Type</ControlLabel>
                                         <div className="col-sm-8 col-md-9">
                                             <FormControl componentClass="select" inputRef={ref => this.wtype = ref}
-                                                         placeholder="select">
+                                                placeholder="select">
                                                 <option value="worker">ALL</option>
                                                 <option value="president">President</option>
                                                 <option value="manager">Manager</option>
@@ -172,7 +186,7 @@ export default class ViewWorkers extends Component {
                                     <div className="row">
                                         <div className="form-group col-sm-12">
                                             <div className=" col-xs-12 text-center">
-                                                <input type="submit" className="btn btn-success" value="Search"/>
+                                                <input type="submit" className="btn btn-success" value="Search" />
                                             </div>
                                         </div>
                                     </div>
@@ -183,20 +197,66 @@ export default class ViewWorkers extends Component {
                 </form>
             </div>
         );
+        let modalBody = null;
+        if (this.state.modalData) {
+            modalBody = (
+                <div>
+                    <form className="form-horizontal" onSubmit={this.doQuery}>
+                        <fieldset>
+                            <div className="row">
+                                <div className="form-group col-sm-6">
+                                    <label className="control-label text-semibold col-sm-4 col-md-3">Id Number</label>
+                                    <div className="col-sm-8 col-md-9">
+                                        <input type='number' disabled name='name' ref={ref => this.peditId = ref} placeholder='ID Number' value={this.state.modalData.ID} className="form-control" />
+                                    </div>
+                                </div>
+                                <div className="form-group col-sm-6">
+                                    <label className="control-label text-semibold col-sm-4 col-md-3">Full Name</label>
+                                    <div className="col-sm-8 col-md-9">
+                                        <input type='text' name='name' ref={ref => this.peditName = ref} placeholder='Project Name' value={this.state.modalData.NAME} className="form-control" />
+                                    </div>
+                                </div>
+                                <div className="form-group col-sm-6">
+                                    <label className="control-label text-semibold col-sm-4 col-md-3">Phone Number</label>
+                                    <div className="col-sm-8 col-md-9">
+                                        <input type='text' name='name' ref={ref => this.peditName = ref} placeholder='Phone Number' value={this.state.modalData.PHONENUMBER} className="form-control" />
+                                    </div>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </form>
+                </div>
+            )
+        }
         return (
             <Grid fluid={true}>
+                <Modal show={this.state.showModal} bsSize="large" onHide={this.close}>
+                    <Modal.Header closeButton>
+                    </Modal.Header>
+                    <Modal.Body>
+                        {modalBody}
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <Button bsStyle="success">
+                            Update
+                            </Button>
+                        <Button bsStyle="danger">
+                            Delete
+                            </Button>
+                    </Modal.Footer>
+                </Modal>
                 <Row>
                     <Col xs={10}>
                         {formBody}
                     </Col>
                     <Col xs={2}>
-                        <ModalOpen eventListener={button} modalBody={newWorkerForm}/>
+                        <ModalOpen eventListener={button} modalBody={newWorkerForm} />
                     </Col>
                 </Row>
                 <Row>
                     <Col xs={12}>
                         <div className="table-responsive">
-                            <JsonTable className="table" rows={this.state.rows} onClickRow={this.onClickRow}/>
+                            <JsonTable className="table" rows={this.state.rows} onClickRow={this.onClickRow} />
                         </div>
                     </Col>
                 </Row>

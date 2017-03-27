@@ -78,7 +78,7 @@ export default class NewProjectForm extends Component {
                                     <div className="form-group col-sm-12">
                                         <label className="control-label text-semibold col-sm-4 col-md-3">Project Description</label>
                                         <div className="col-sm-8 col-md-9">
-                                            <textarea ref={ref => this.pdescription = ref} placeholder="Project Description"></textarea>
+                                            <textarea className="form-control" ref={ref => this.pdescription = ref} placeholder="Project Description"></textarea>
                                         </div>
                                     </div>
                                 </div>
@@ -100,7 +100,7 @@ export default class NewProjectForm extends Component {
         )
 
         return (
-                formBody
+            formBody
         );
     }
 }

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 let request = require('request-promise-native');
-import { Grid, Row, Col, ListGroup, ControlLabel, FormControl, Button, ListGroupItem } from 'react-bootstrap';
+import { Grid, Row, Col, Modal, ListGroup, ControlLabel, FormControl, Button, ListGroupItem } from 'react-bootstrap';
 import JsonTable from 'react-json-table';
 import ModalOpen from '../Modal'
 import NewProjectForm from './newProjectForm'
@@ -14,8 +14,11 @@ export default class ViewProjects extends Component {
         this.state = {
             errors: {},
             rows: [],
-            aggregation: []
+            aggregation: [],
+            showModal: false
         };
+        this.close = this.close.bind(this);
+        this.open = this.open.bind(this);
         this.doQuery = this.doQuery.bind(this);
         this.onClickRow = this.onClickRow.bind(this);
     }
@@ -46,7 +49,7 @@ export default class ViewProjects extends Component {
                 request(options)
                     .then(function (body) {
                         console.log(body);
-                        for(let i = 0; i < body.rows.length; i++){
+                        for (let i = 0; i < body.rows.length; i++) {
                             body.rows[i]["COUNT"] = body.rows[i]["COUNT(*)"];
                             delete body.rows[i]["COUNT(*)"];
                         }
@@ -63,10 +66,19 @@ export default class ViewProjects extends Component {
             });
     }
 
+    close() {
+        this.setState({ showModal: false });
+    }
+
+    open() {
+        this.setState({ showModal: true });
+    }
 
     onClickRow(e, data) {
         console.log(e);
         console.log(data);
+        this.open();
+        this.setState({ modalData: data });
     }
 
     doQuery(e) {
@@ -117,7 +129,7 @@ export default class ViewProjects extends Component {
                 request(options)
                     .then(function (body) {
                         console.log(body);
-                        for(let i = 0; i < body.rows.length; i++){
+                        for (let i = 0; i < body.rows.length; i++) {
                             body.rows[i][aggr] = body.rows[i][aggrQuery];
                             delete body.rows[i][aggrQuery];
                         }
@@ -138,6 +150,7 @@ export default class ViewProjects extends Component {
     render() {
         const button = (<Button bsStyle="success">Add New Project </Button>)
         const newProjectForm = <NewProjectForm />
+
         const formBody = (
             <div>
                 <form className="form-horizontal" onSubmit={this.doQuery}>
@@ -183,8 +196,55 @@ export default class ViewProjects extends Component {
                 </form>
             </div>
         )
+        let modalBody = null;
+        if (this.state.modalData) {
+            modalBody = (
+                <div>
+                    <form className="form-horizontal" onSubmit={this.doQuery}>
+                        <fieldset>
+                            <div className="row">
+                                <div className="form-group col-sm-6">
+                                    <label className="control-label text-semibold col-sm-4 col-md-3">Id Number</label>
+                                    <div className="col-sm-8 col-md-9">
+                                        <input type='number' disabled name='name' ref={ref => this.peditId = ref} placeholder='ID Number' value={this.state.modalData.PID} className="form-control" />
+                                    </div>
+                                </div>
+                                <div className="form-group col-sm-6">
+                                    <label className="control-label text-semibold col-sm-4 col-md-3">Project Name</label>
+                                    <div className="col-sm-8 col-md-9">
+                                        <input type='text' name='name' ref={ref => this.peditName = ref} placeholder='Project Name' value={this.state.modalData.NAME} className="form-control" />
+                                    </div>
+                                </div>
+                                <div className="form-group col-sm-12">
+                                    <label className="control-label text-semibold col-sm-4 col-md-3">Project Description</label>
+                                    <div className="col-sm-8 col-md-9">
+                                        <textarea ref={ref => this.pdescription = ref} className="form-control" placeholder="Project Description" value={this.state.modalData.DESCRIPTION} ></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </form>
+                </div>
+            )
+        }
+
         return (
             <Grid fluid={true}>
+                <Modal show={this.state.showModal} bsSize="large" onHide={this.close}>
+                    <Modal.Header closeButton>
+                    </Modal.Header>
+                    <Modal.Body>
+                        {modalBody}
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <Button bsStyle="success">
+                            Update
+                            </Button>
+                        <Button bsStyle="danger">
+                            Delete
+                            </Button>
+                    </Modal.Footer>
+                </Modal>
                 <Row>
                     <Col xs={10}>
                         {formBody}
