@@ -17,6 +17,7 @@ export default class ViewProjects extends Component {
             aggregation: []
         };
         this.doQuery = this.doQuery.bind(this);
+        this.onClickRow = this.onClickRow.bind(this);
     }
 
     componentWillMount() {
@@ -62,6 +63,11 @@ export default class ViewProjects extends Component {
             });
     }
 
+
+    onClickRow(e, data) {
+        console.log(e);
+        console.log(data);
+    }
 
     doQuery(e) {
         e.preventDefault();

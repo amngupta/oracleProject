@@ -31,12 +31,8 @@ export default class ViewWorkerProject extends Component {
         request(options)
             .then(function (body) {
                 console.log(body);
-                let columns = [];
-                body.metaData.forEach((mD) => {
-                    columns.push(mD.name);
-                })
                 self.setState({
-                    rows: body.rows, columnNames: columns
+                    rows: body.rows
                 });
             })
             .catch(function (err) {
@@ -46,7 +42,8 @@ export default class ViewWorkerProject extends Component {
     }
 
 
-    doQuery() {
+    doQuery(e) {
+        e.preventDefault();
         let id = this.pid.value || null;
         let workerType = this.wtype.value || null;
         // switch (tableChoice) {
@@ -91,12 +88,8 @@ export default class ViewWorkerProject extends Component {
         request(options)
             .then(function (body) {
                 console.log(body);
-                let columns = [];
-                body.metaData.forEach((mD) => {
-                    columns.push(mD.name);
-                })
                 self.setState({
-                    rows: body.rows, columnNames: columns
+                    rows: body.rows
                 });
             })
             .catch(function (err) {
