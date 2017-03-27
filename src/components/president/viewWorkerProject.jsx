@@ -19,7 +19,7 @@ export default class ViewWorkerProject extends Component {
     }
 
     componentWillMount() {
-        let query = "SELECT * from Worker"
+        let query = "SELECT pb.PID as ProjectId, pb.NAME as Project, w.ID as WorkerID, w.NAME as Name from Worker w, ProjectManager pm, ProjectBudget pb WHERE (pm.PID = pb.PID AND pm.man_ID = w.ID)"
         let options = {
             uri: 'http://localhost:9000/query/' + encodeURI(query),
             headers: {
@@ -32,12 +32,32 @@ export default class ViewWorkerProject extends Component {
             .then(function (body) {
                 console.log(body);
                 self.setState({
-                    rows: body.rows
+                    managers: body.rows
                 });
             })
             .catch(function (err) {
                 // API call failed... 
                 console.error(err);
+            });
+
+        let query2 = "SELECT pb.PID as ProjectId, pb.NAME as Project, w.ID as WorkerID, w.NAME as Name, pe.Role as ROLE from Worker w, ProjectAssignedToEmployee pe, ProjectBudget pb WHERE (pe.PID = pb.PID AND pe.emp_ID = w.ID)"
+        let options2 = {
+            uri: 'http://localhost:9000/query/' + encodeURI(query2),
+            headers: {
+                'User-Agent': 'Request-Promise'
+            },
+            json: true // Automatically parses the JSON string in the response 
+        };
+        request(options2)
+            .then(function (body2) {
+                console.log(body2);
+                self.setState({
+                    employees: body2.rows
+                });
+            })
+            .catch(function (err2) {
+                // API call failed... 
+                console.error(err2);
             });
     }
 
@@ -46,36 +66,6 @@ export default class ViewWorkerProject extends Component {
         e.preventDefault();
         let id = this.pid.value || null;
         let workerType = this.wtype.value || null;
-        // switch (tableChoice) {
-        //     case worker:
-        //         table = "";
-        //         id = "w.id";
-        //         break;
-        //     case employee:
-        //         table = ", employee e";
-        //         id = "e.emp_id"
-        //         break;
-        //     case manager:
-        //         table = ", manager m";
-        //         id = "m.man_id";
-        //         break;
-        //     case president:
-        //         table = ", president p";
-        //         id = "p.pres_id";
-        //         break;
-        // }
-        // switch (filterChoice) {
-        //     case id:
-        //         filter = "id='" + input + "'"
-        //         break;
-        //     case name:
-        //         filter = "name='" + input + "'"
-        //         break;
-        //     case phonenumber:
-        //         filter = "phonenumber='" + input + "'"
-        //         break;
-        // }
-        // let query = "SELECT DISTINCT w.id, w.name, w.phonenumber FROM worker w" + table + " WHERE w." + filter + " AND w.id=" + id;
         let query = {};
         let self = this;
         let options = {
@@ -147,8 +137,15 @@ export default class ViewWorkerProject extends Component {
                 </Row>
                 <Row>
                     <Col xs={12}>
+                        <h1>Managers</h1>
                         <div className="table-responsive">
-                            <JsonTable className="table" rows={this.state.rows} onClickRow={this.onClickRow} />
+                            <JsonTable className="table" rows={this.state.managers} />
+                        </div>
+                    </Col>
+                    <Col xs={12}>
+                        <h1>Employees</h1>
+                        <div className="table-responsive">
+                            <JsonTable className="table" rows={this.state.employees} />
                         </div>
                     </Col>
                 </Row>
