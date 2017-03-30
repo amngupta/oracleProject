@@ -19,8 +19,10 @@ export default class ViewWorkers extends Component {
         };
         this.close = this.close.bind(this);
         this.open = this.open.bind(this);
-        this.onClickRow = this.onClickRow.bind(this);
         this.doQuery = this.doQuery.bind(this);
+        this.onClickRow = this.onClickRow.bind(this);
+        this.onClickUpdate = this.onClickUpdate.bind(this);
+        this.onClickDelete = this.onClickDelete.bind(this);
     }
 
     componentWillMount() {
@@ -57,7 +59,7 @@ export default class ViewWorkers extends Component {
     }
 
     doQuery(e) {
-        e.preventDefault();
+        if (e) { e.preventDefault(); }
         let table = this.wtype.value;
         let table_id;
         switch (table) {
@@ -131,6 +133,66 @@ export default class ViewWorkers extends Component {
         console.log(data);
         this.open();
         this.setState({ modalData: data });
+    }
+
+    onClickUpdate() {
+        let id = this.peditId.value || null;
+        if (!id) { return (console.error("ID is null...")); }
+        let name = this.peditName.value || null;
+        let phone = this.peditPhone.value || null;
+
+        let update = "";
+        if (name && (name !== this.state.modalData.NAME)) {
+            update = "w.name='" + name + "'";
+        }
+        if (phone && (phone !== this.state.modalData.PHONENUMBER)) {
+            let set = "w.phonenumber='" + phone + "'";
+            update = update ? update + ", " + set : set;
+        }
+        if (!update) { return (alert("No changes to update!")); }
+
+        let query = "UPDATE worker w SET " + update + " WHERE w.id=" + id;
+        let self = this;
+        let options = {
+            uri: 'http://localhost:9000/query/' + encodeURI(query),
+            headers: {
+                'User-Agent': 'Request-Promise'
+            },
+            json: true
+        };
+        request(options)
+            .then(function (body) {
+                console.log(body);
+                self.doQuery();
+                self.close();
+            })
+            .catch(function (err) {
+                console.error(err);
+            });
+    }
+
+    onClickDelete() {
+        let id = this.peditId.value || null;
+        if (!id) { return (console.error("ID is null...")); }
+
+        let query = "DELETE FROM worker w WHERE w.id=" + id;
+        let self = this;
+        let options = {
+            uri: 'http://localhost:9000/query/' + encodeURI(query),
+            headers: {
+                'User-Agent': 'Request-Promise'
+            },
+            json: true
+        };
+        request(options)
+            .then(function (body) {
+                console.log(body);
+                self.doQuery();
+                self.close();
+            })
+            .catch(function (err) {
+                console.error(err);
+            });
     }
 
     render() {
@@ -207,19 +269,19 @@ export default class ViewWorkers extends Component {
                                 <div className="form-group col-sm-6">
                                     <label className="control-label text-semibold col-sm-4 col-md-3">Id Number</label>
                                     <div className="col-sm-8 col-md-9">
-                                        <input type='number' disabled name='name' ref={ref => this.peditId = ref} placeholder='ID Number' value={this.state.modalData.ID} className="form-control" />
+                                        <input type='number' disabled name='name' ref={ref => this.peditId = ref} placeholder='ID Number' defaultValue={this.state.modalData.ID} className="form-control" />
                                     </div>
                                 </div>
                                 <div className="form-group col-sm-6">
                                     <label className="control-label text-semibold col-sm-4 col-md-3">Full Name</label>
                                     <div className="col-sm-8 col-md-9">
-                                        <input type='text' name='name' ref={ref => this.peditName = ref} placeholder='Project Name' value={this.state.modalData.NAME} className="form-control" />
+                                        <input type='text' name='name' ref={ref => this.peditName = ref} placeholder='Full Name' defaultValue={this.state.modalData.NAME} maxLength={25} className="form-control" />
                                     </div>
                                 </div>
                                 <div className="form-group col-sm-6">
                                     <label className="control-label text-semibold col-sm-4 col-md-3">Phone Number</label>
                                     <div className="col-sm-8 col-md-9">
-                                        <input type='text' name='name' ref={ref => this.peditName = ref} placeholder='Phone Number' value={this.state.modalData.PHONENUMBER} className="form-control" />
+                                        <input type='text' name='name' ref={ref => this.peditPhone = ref} placeholder='Phone Number' defaultValue={this.state.modalData.PHONENUMBER} maxLength={13} className="form-control" />
                                     </div>
                                 </div>
                             </div>
@@ -237,10 +299,10 @@ export default class ViewWorkers extends Component {
                         {modalBody}
                     </Modal.Body>
                     <Modal.Footer>
-                        <Button bsStyle="success">
+                        <Button bsStyle="success" onClick={this.onClickUpdate}>
                             Update
                             </Button>
-                        <Button bsStyle="danger">
+                        <Button bsStyle="danger" onClick={this.onClickDelete}>
                             Delete
                             </Button>
                     </Modal.Footer>
