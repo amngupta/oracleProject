@@ -187,20 +187,18 @@ export default class ViewExpenditures extends Component {
                                     </div>
                                 </div>
                                 <div className="row">
-                                    <div className="form-group col-sm-5">
+                                    <div className="form-group col-sm-6">
                                         <label className="control-label text-semibold col-sm-4 col-md-3">Type</label>
                                         <div className="col-sm-8 col-md-9">
                                             <input type='text' name='name' ref={ref => this.type = ref} placeholder='Type' className="form-control" />
                                         </div>
                                     </div>
-                                    <div className="form-group col-sm-4">
-                                        <label className="control-label text-semibold col-sm-4 col-md-5">Amount</label>
+                                    <div className="form-group col-sm-6">
+                                        <label className="control-label text-semibold col-sm-4 col-md-3">Amount</label>
                                         <div className="col-sm-5 col-md-6">
                                             <input type='number' name='name' ref={ref => this.amt = ref} placeholder='Amount' className="form-control" />
                                         </div>
-                                    </div>
-                                    <div className="form-group col-sm-3">
-                                        <div className="col-sm-5 col-md-5">
+                                       <div className="col-sm-3 col-md-3">
                                             <FormControl componentClass="select" inputRef={ref => this.relation = ref}>
                                                 <option value="=">{"="}</option>
                                                 <option value=">=">{">="}</option>

@@ -31,10 +31,12 @@ export default class NewExpenditureForm extends Component {
             },
             json: true
         };
+        let maxID;
+        let wid
         request(options)
             .then(function (body) {
-                let maxID = body.rows[0]["MAX(E.EID)"] + 1;
-                let wid = 11; // TODO: should be passed in...
+                maxID = body.rows[0]["MAX(E.EID)"] + 1;
+                wid = 11; // TODO: should be passed in...
                 let date = "to_date('" + moment().format("YYYY-MM-DD HH:MM:ss") + "', 'YYYY-MM-DD HH24:MI:SS')";
                 console.log(date);
 
