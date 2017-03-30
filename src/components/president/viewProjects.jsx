@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 let request = require('request-promise-native');
 import { Grid, Row, Col, Modal, ListGroup, ControlLabel, FormControl, Button, ListGroupItem } from 'react-bootstrap';
+import { NavLink } from 'react-router-dom'
 import JsonTable from 'react-json-table';
 import ModalOpen from '../Modal'
 import NewProjectForm from './newProjectForm'
@@ -23,6 +24,7 @@ export default class ViewProjects extends Component {
         this.onClickRow = this.onClickRow.bind(this);
         this.onClickUpdate = this.onClickUpdate.bind(this);
         this.onClickDelete = this.onClickDelete.bind(this);
+        this.onClickView = this.onClickView.bind(this);
     }
 
     componentWillMount() {
@@ -213,6 +215,10 @@ export default class ViewProjects extends Component {
             });
     }
 
+    onClickView() {
+        window.location = "/president/workers?pid=" + this.state.modalData.PID;
+    }
+
     render() {
         const button = (<Button bsStyle="success">Add New Project </Button>)
         const newProjectForm = <NewProjectForm />
@@ -311,12 +317,15 @@ export default class ViewProjects extends Component {
                         {modalBody}
                     </Modal.Body>
                     <Modal.Footer>
+                        <Button bsStyle="info" onClick={this.onClickView}>
+                                View project workers
+                        </Button> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                         <Button bsStyle="success" onClick={this.onClickUpdate}>
                             Update
-                            </Button>
+                        </Button>
                         <Button bsStyle="danger" onClick={this.onClickDelete}>
                             Delete
-                            </Button>
+                        </Button>
                     </Modal.Footer>
                 </Modal>
                 <Row>
