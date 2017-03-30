@@ -51,19 +51,6 @@ export default class NewExpenditureForm extends Component {
                 return request(options)
             })
             .then(function (body) {
-                // switch (table) {
-                //     case "employee":
-                //         query = "INSERT INTO employee VALUES (" + maxID + ", 11)";
-                //         break;
-                //     case "manager":
-                //         query = "INSERT INTO manager VALUES (" + maxID + ", 1)";
-                //         break;
-                //     case "president":
-                //         query = "INSERT INTO president VALUES (" + maxID + ")";
-                //         break;
-                //     default:
-                //         break;
-                // }
                 query = "INSERT INTO ExpenditureManager VALUES (" + maxID + ", " + id + ", " + wid + ")";
                 let options = {
                     uri: 'http://localhost:9000/query/' + encodeURI(query),

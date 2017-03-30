@@ -144,7 +144,7 @@ INSERT INTO Employee VALUES (38, 39);
 
 CREATE TABLE ProjectBudget (
 	PID		NUMBER,
-	Name	CHAR(50),
+	Name	VARCHAR2(50),
 	Budget		NUMBER NOT NULL,
 	Description	VARCHAR2(1000),
 	PRIMARY KEY (PID)
