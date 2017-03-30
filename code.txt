@@ -1,0 +1,1976 @@
+{
+  "name": "304project",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "express": "^4.15.2",
+    "fs": "^0.0.1-security",
+    "moment": "^2.18.1",
+    "moment-timezone": "^0.5.11",
+    "morgan": "^1.8.1",
+    "oracledb": "^1.12.2",
+    "queryString": "^4.3.2",
+    "react": "^15.4.2",
+    "react-bootstrap": "^0.30.8",
+    "react-dom": "^15.4.2",
+    "react-json-table": "^0.1.1",
+    "react-moment": "^0.2.2",
+    "react-router": "^3.0.2",
+    "react-router-dom": "^4.0.0",
+    "request": "^2.81.0",
+    "request-promise-native": "^1.0.3"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.18.0",
+    "babel-loader": "^6.2.1",
+    "babel-preset-es2015": "^6.18.0",
+    "chai": "^3.4.1",
+    "eslint": "^1.10.3",
+    "mocha": "^2.3.4",
+    "react-scripts": "0.9.4",
+    "webpack": "^1.12.12",
+    "webpack-dev-server": "^1.14.1"
+  },
+  "scripts": {
+    "reset-oracle": "babel-node index.js",
+    "start-server": "babel-node --presets es2015 server",
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
+  }
+}
+
+.App {
+  text-align: center;
+  width: 100%;
+}
+
+.App-logo {
+  animation: App-logo-spin infinite 20s linear;
+  height: 80px;
+}
+
+.App-header {
+  background-color: #222;
+  height: 150px;
+  padding: 20px;
+  color: white;
+}
+
+
+@keyframes App-logo-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+textarea{
+  width: 80%;
+}import React, { Component } from 'react';
+import './App.css';
+import { Col, Grid, Row } from 'react-bootstrap';
+import QueryBox from './components/QueryBox'
+
+export default class AppContainer extends Component {
+
+  render() {
+    const {children} = this.props;
+    return (
+      <Grid fluid={true}>
+        <Row>
+          <div className="App">
+            <Col xs={12}>
+              {children}
+              <QueryBox />
+            </Col>
+          </div>
+        </Row>
+      </Grid>
+    );
+  }
+}
+
+AppContainer.propTypes = {
+  children: React.PropTypes.node,
+}
+
+AppContainer.contextTypes = {
+  router: React.PropTypes.object.isRequired
+};import React from 'react';
+import ReactDOM from 'react-dom';
+import App from './components/App';
+
+it('renders without crashing', () => {
+  const div = document.createElement('div');
+  ReactDOM.render(<App />, div);
+});
+body {
+  margin: 0;
+  padding: 0;
+  font-family: sans-serif;
+}
+
+.navbar{
+  margin: 15px !important;
+}import ReactDOM from 'react-dom';
+import Routes from './routes';
+import './index.css';
+
+ReactDOM.render(
+  Routes,
+  document.getElementById('root')
+);import React from 'react';
+import {
+    BrowserRouter as Router,
+    Route,
+    Link, NavLink
+} from 'react-router-dom'
+import AppContainer from './App';
+// import createBrowserHistory from 'history/createBrowserHistory'
+import { Nav, Navbar, NavDropdown, MenuItem } from 'react-bootstrap';
+import ViewProjects from './components/president/viewProjects';
+import ViewWorkers from './components/president/viewWorkers';
+import ViewWorkerProjects from './components/president/viewWorkerProject';
+import ViewExpenditures from './components/manager/viewExpenditure';
+import NewExpenditureForm from './components/employee/newExpenditureForm';
+
+
+const Routes = (
+    <Router>
+        <div>
+            <Navbar collapseOnSelect>
+                <Navbar.Header>
+                    <Navbar.Brand>
+                        <Link to="/">
+                            Scrooge McDuck
+                        </Link>
+                    </Navbar.Brand>
+                    <Navbar.Toggle />
+                </Navbar.Header>
+                <Navbar.Collapse>
+                    <Nav>
+                        <NavDropdown eventKey={1} title="President" id="basic-nav-dropdown">
+                            <MenuItem eventKey={1.1}><NavLink to="/president/project">Project</NavLink></MenuItem>
+                            <MenuItem eventKey={1.2}><NavLink to="/president/workers">Workers</NavLink></MenuItem>
+                            <MenuItem eventKey={1.2}><NavLink to="/president/workerProjects">Employee Projects</NavLink></MenuItem>
+                        </NavDropdown>
+                        <NavDropdown eventKey={2} title="Manager" id="basic-nav-dropdown">
+                            <MenuItem eventKey={2.1}><NavLink to="/manager/expenditure">Expenditure Reports</NavLink></MenuItem>
+                        </NavDropdown>
+                        <NavDropdown eventKey={3} title="Employee" id="basic-nav-dropdown">
+                            <MenuItem eventKey={3.1}><NavLink to="/employee/add-expenditure">Add Expenditure</NavLink></MenuItem>
+                        </NavDropdown>
+                    </Nav>
+                </Navbar.Collapse>
+            </Navbar>
+            <Route exact path="/" component={AppContainer} />
+            <Route path="/president/project" component={ViewProjects} />
+            <Route path="/president/workers" component={ViewWorkers} />
+            <Route path="/president/workerProjects" component={ViewWorkerProjects} />
+            <Route path="/manager/expenditure" component={ViewExpenditures} />
+            <Route path="/employee/add-expenditure" component={NewExpenditureForm} />
+        </div>
+    </Router>
+);
+
+export default Routes;import React, { Component } from 'react';
+import '../App.css';
+import {Nav, Navbar, NavItem, NavDropdown, MenuItem} from 'react-bootstrap';
+
+export default class Header extends Component {
+    render() {
+        return (
+            <Navbar collapseOnSelect>
+                <Navbar.Header>
+                    <Navbar.Brand>
+                        Scrooge McDuck Co
+                    </Navbar.Brand>
+                    <Navbar.Toggle />
+                </Navbar.Header>
+                <Navbar.Collapse>
+                    <Nav>
+                        <NavItem eventKey={1} href="#">Link</NavItem>
+                        <NavItem eventKey={2} href="#">Link</NavItem>
+                        <NavDropdown eventKey={3} title="Dropdown" id="basic-nav-dropdown">
+                            <MenuItem eventKey={3.1}>Action</MenuItem>
+                            <MenuItem eventKey={3.2}>Another action</MenuItem>
+                            <MenuItem eventKey={3.3}>Something else here</MenuItem>
+                            <MenuItem divider />
+                            <MenuItem eventKey={3.3}>Separated link</MenuItem>
+                        </NavDropdown>
+                    </Nav>
+                    <Nav pullRight>
+                        <NavItem eventKey={1} href="#">Link Right</NavItem>
+                        <NavItem eventKey={2} href="#">Link Right</NavItem>
+                    </Nav>
+                </Navbar.Collapse>
+            </Navbar>
+        );
+    }
+}
+import React, { Component } from 'react';
+import { Modal } from 'react-bootstrap';
+
+export default class ModalOpen extends Component {
+    constructor(props) {
+        super(props);
+        this.state = { showModal: false };
+        this.close = this.close.bind(this);
+        this.open = this.open.bind(this);
+        this.modalFooterImp = this.modalFooterImp.bind(this);
+    }
+
+    close() {
+        this.setState({ page: false, showModal: false });
+    }
+
+    open() {
+        this.setState({ showModal: true });
+    }
+
+    modalFooterImp() {
+        let check = this.props.modalFooterFunc();
+        if (check === 1 || check)
+            this.close();
+    }
+
+    render() {
+
+        let {modalBody, modalHeader, eventListener} = this.props;
+        return (
+            <div>
+                <div onClick={this.open} >
+                    {eventListener}
+                </div>
+
+                <Modal show={this.state.showModal} bsSize="large" onHide={this.close}>
+                    <Modal.Header closeButton>
+                        <Modal.Title>
+                            {modalHeader}
+                        </Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        {modalBody}
+                    </Modal.Body>
+                </Modal>
+            </div>
+        );
+    }
+}
+
+
+ModalOpen.propTypes = {
+    eventListener: React.PropTypes.object,
+    modalFooter: React.PropTypes.node,
+    modalHeader: React.PropTypes.string,
+    modalBody: React.PropTypes.node
+};
+import React, { Component } from 'react';
+let request = require('request-promise-native');
+import { Button, Col, Grid } from 'react-bootstrap';
+import JsonTable from 'react-json-table';
+
+export default class QueryBox extends Component {
+
+    constructor(props) {
+        super(props);
+        this.state = {
+            errors: {},
+            rows: []
+        };
+        this.doQuery = this.doQuery.bind(this);
+    }
+
+
+    doQuery() {
+        let self = this;
+        let query = this.queryBox.value;
+        console.log(query);
+        var options = {
+            uri: 'http://localhost:9000/query/' + encodeURI(query),
+            headers: {
+                'User-Agent': 'Request-Promise'
+            },
+            json: true // Automatically parses the JSON string in the response 
+        };
+        request(options)
+            .then(function (body) {
+                console.log(body);
+                let columns = [];
+                body.metaData.forEach((mD) => {
+                    columns.push(mD.name);
+                })
+                self.setState({
+                    rows: body.rows, columnNames: columns
+                });
+                // console.log(self.state.rows);
+            })
+            .catch(function (err) {
+                // API call failed... 
+                console.error(err);
+            });
+    }
+
+    render() {
+        return (
+            <Grid fluid={true}>
+                <Col xs={12}>
+                    <h1>Welcome to Scrooge McDuck Project Management </h1>
+                    <h3>Use queryBox below or use the interface...</h3>
+                </Col>
+                <Col xs={10}>
+                    <textarea ref={ref => this.queryBox = ref} className="App-intro">
+
+                    </textarea>
+                </Col>
+                <Col xs={2}>
+                    <Button onClick={() => { this.doQuery() }} bsStyle="success">
+                        GO
+            </Button>
+                </Col>
+                <Col xs={12}>
+                    <div className="table-responsive">
+                        <JsonTable className="table" rows={this.state.rows} />
+                    </div>
+                </Col>
+            </Grid>
+        );
+    }
+}
+import React, { Component } from 'react';
+let request = require('request-promise-native');
+import { ListGroup, ListGroupItem } from 'react-bootstrap';
+let moment = require('moment');
+
+export default class NewExpenditureForm extends Component {
+
+    constructor(props) {
+        super(props);
+        this.state = {
+            errors: {},
+            rows: []
+        };
+        this.doQuery = this.doQuery.bind(this);
+    }
+
+
+    doQuery(e) {
+        e.preventDefault();
+        let id = this.pid.value || null;
+        let type = this.etype.value || null;
+        let amt = this.eamount.value || null;
+        let desc = this.edescription.value || null;
+
+        if (id === null || type === null || amt === null || desc === null) { return; }
+        let query = "SELECT MAX(e.eid) FROM expenditure e";
+        let options = {
+            uri: 'http://localhost:9000/query/' + encodeURI(query),
+            headers: {
+                'User-Agent': 'Request-Promise'
+            },
+            json: true
+        };
+        let maxID;
+        let wid
+        request(options)
+            .then(function (body) {
+                maxID = body.rows[0]["MAX(E.EID)"] + 1;
+                wid = 11; // TODO: should be passed in...
+                let date = "to_date('" + moment().format("YYYY-MM-DD HH:MM:ss") + "', 'YYYY-MM-DD HH24:MI:SS')";
+                console.log(date);
+
+                query = "INSERT INTO Expenditure VALUES (" + maxID + ", '" + type + "', '" + desc + "', " + date + ", " + amt + ")";
+                let options = {
+                    uri: 'http://localhost:9000/query/' + encodeURI(query),
+                    headers: {
+                        'User-Agent': 'Request-Promise'
+                    },
+                    json: true
+                };
+                return request(options)
+            })
+            .then(function (body) {
+                // switch (table) {
+                //     case "employee":
+                //         query = "INSERT INTO employee VALUES (" + maxID + ", 11)";
+                //         break;
+                //     case "manager":
+                //         query = "INSERT INTO manager VALUES (" + maxID + ", 1)";
+                //         break;
+                //     case "president":
+                //         query = "INSERT INTO president VALUES (" + maxID + ")";
+                //         break;
+                //     default:
+                //         break;
+                // }
+                query = "INSERT INTO ExpenditureManager VALUES (" + maxID + ", " + id + ", " + wid + ")";
+                let options = {
+                    uri: 'http://localhost:9000/query/' + encodeURI(query),
+                    headers: {
+                        'User-Agent': 'Request-Promise'
+                    },
+                    json: true
+                };
+                return request(options)
+            })
+            .then(function (body) {
+                alert("Added " + type + " expendture!");
+            })
+            .catch(function (err) {
+                console.error(err);
+            });
+    }
+
+    render() {
+        const formBody = (
+            <div>
+                <form className="form-horizontal" onSubmit={this.doQuery}>
+                    <fieldset>
+                        <ListGroup>
+                            <ListGroupItem>
+                                <div className="row">
+                                    <div className="form-group col-sm-6">
+                                        <label className="control-label text-semibold col-sm-4 col-md-3">Project Id</label>
+                                        <div className="col-sm-8 col-md-9">
+                                            <input type='number' name='name' ref={ref => this.pid = ref} placeholder='Project Id' className="form-control" />
+                                        </div>
+                                    </div>
+                                    <div className="form-group col-sm-6">
+                                        <label className="control-label text-semibold col-sm-4 col-md-3">Expenditure Type</label>
+                                        <div className="col-sm-8 col-md-9">
+                                            <input type='text' name='name' ref={ref => this.etype = ref} placeholder='Type' className="form-control" />
+                                        </div>
+                                    </div>
+                                    <div className="form-group col-sm-6">
+                                        <label className="control-label text-semibold col-sm-4 col-md-3">Amount</label>
+                                        <div className="col-sm-8 col-md-9">
+                                            <input type='number' ref={ref => this.eamount = ref} placeholder='Amount' className="form-control" />
+                                        </div>
+                                    </div>
+                                    <div className="form-group col-sm-6">
+                                        <label className="control-label text-semibold col-sm-4 col-md-3">Description</label>
+                                        <div className="col-sm-8 col-md-9">
+                                            <textarea className="form-control" ref={ref => this.edescription = ref} placeholder="Expenditure Description"></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                            </ListGroupItem>
+                            <ListGroupItem>
+                                <div className="row">
+                                    <div className="form-group col-sm-12">
+                                        <div className=" col-xs-12 text-center">
+                                            <input type="submit" className="btn btn-success" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </ListGroupItem>
+                        </ListGroup>
+                    </fieldset>
+
+                </form>
+            </div>
+        )
+
+        return (
+            formBody
+        );
+    }
+}
+import React, { Component } from 'react';
+let request = require('request-promise-native');
+import { Grid, Row, Col, Modal, ListGroup, ControlLabel, FormControl, Button, ListGroupItem } from 'react-bootstrap';
+import JsonTable from 'react-json-table';
+import ModalOpen from '../Modal';
+import Moment from 'react-moment';
+import NewExpenditureForm from '../employee/newExpenditureForm';
+export default class ViewExpenditures extends Component {
+
+    constructor(props) {
+        super(props);
+        this.state = {
+            errors: {},
+            rows: [],
+            aggregation: [],
+        };
+        this.doQuery = this.doQuery.bind(this);
+    }
+
+    componentWillMount() {
+        console.log("Here");
+        let query = "SELECT * from Expenditure";
+        let options = {
+            uri: 'http://localhost:9000/query/' + encodeURI(query),
+            headers: {
+                'User-Agent': 'Request-Promise'
+            },
+            json: true
+        };
+        let self = this;
+        request(options)
+            .then(function (body) {
+                self.setState({
+                    rows: body.rows
+                });
+                query = "SELECT COUNT(*) FROM Expenditure";
+                options = {
+                    uri: 'http://localhost:9000/query/' + encodeURI(query),
+                    headers: {
+                        'User-Agent': 'Request-Promise'
+                    },
+                    json: true
+                };
+                request(options)
+                    .then(function (body) {
+                        console.log(body);
+                        for (let i = 0; i < body.rows.length; i++) {
+                            body.rows[i]["COUNT"] = body.rows[i]["COUNT(*)"];
+                            delete body.rows[i]["COUNT(*)"];
+                        }
+                        self.setState({
+                            aggregation: body.rows
+                        });
+                    })
+                    .catch(function (err) {
+                        console.error(err);
+                    });
+            })
+            .catch(function (err) {
+                console.error(err);
+            });
+    }
+
+    doQuery(e) {
+        e.preventDefault();
+        let id = this.pid.value || null;
+
+
+        let desc = this.desc.value || null;
+        let type = this.type.value || null;
+        let amt = this.amt.value || null;
+        let rel = this.relation.value || null;
+        let group = this.group.value || null;
+        let aggr = this.aggr.value || null;
+
+        let filter = [];
+        let querySuffix = " FROM Expenditure e";
+        if (desc) { filter.push("LOWER(e.description) LIKE LOWER('%" + desc + "%')"); }
+        if (type) { filter.push("LOWER(e.type) LIKE LOWER('%" + type + "%')"); }
+        if (amt && rel) { filter.push("e.amount" + rel + amt); }
+        if (id) {
+            let q = "(e.eid IN (SELECT ew.eid FROM ExpenditureWorker ew WHERE ew.pid=" + id + " AND e.eid=ew.eid)" +
+                "OR e.eid IN (SELECT em.eid FROM ExpenditureManager em WHERE em.pid=" + id + " AND e.eid=em.eid))";
+            filter.push(q);
+        }
+
+        if (filter.length !== 0) { querySuffix += " WHERE " + filter.join(" AND "); }
+
+        let self = this;
+        let options = {
+            uri: 'http://localhost:9000/query/' + encodeURI("SELECT DISTINCT *" + querySuffix),
+            headers: {
+                'User-Agent': 'Request-Promise'
+            },
+            json: true
+        };
+        request(options)
+            .then(function (body) {
+                console.log(body);
+                self.setState({
+                    rows: body.rows
+                });
+                let aggrQuery = "";
+                switch (aggr) {
+                    case "COUNT":
+                        aggrQuery = aggr + "(*)";
+                        break;
+                    case "AVG":
+                    case "MAX":
+                    case "MIN":
+                    case "SUM":
+                        aggrQuery = aggr + "(E.AMOUNT)";
+                        break;
+                    default:
+                        break;
+                }
+                let groupByCol = "";
+                let queryGroupBy = "";
+                if (group && group !== "NONE") {
+                    if (group === "TYPE") {
+                        groupByCol = "e.type, ";
+                        queryGroupBy = " GROUP BY e.type";
+                    }
+                }
+                let options = {
+                    uri: 'http://localhost:9000/query/' + encodeURI("SELECT DISTINCT " + groupByCol + aggrQuery + querySuffix + queryGroupBy),
+                    headers: {
+                        'User-Agent': 'Request-Promise'
+                    },
+                    json: true
+                };
+                request(options)
+                    .then(function (body) {
+                        console.log(body);
+                        for (let i = 0; i < body.rows.length; i++) {
+                            body.rows[i][aggr] = body.rows[i][aggrQuery];
+                            delete body.rows[i][aggrQuery];
+                        }
+                        self.setState({
+                            aggregation: body.rows
+                        });
+                    })
+                    .catch(function (err) {
+                        console.error(err);
+                    });
+            })
+            .catch(function (err) {
+                console.error(err);
+            });
+    }
+
+
+    render() {
+        const columns = [
+            "EID",
+            "TYPE",
+            "DESCRIPTION",
+            {
+                key: "EXPENDITURE_DATE", label: "DATE",
+                cell: (item, columnKey) => {
+                    return <Moment format="DD/MM/YYYY">{item.EXPENDITURE_DATE}</Moment>;
+                }
+            }, "AMOUNT"
+        ];
+
+        const button = (<Button bsStyle="success">Add New Expenditure </Button>);
+        const newExpenditure = <NewExpenditureForm />;
+
+        const formBody = (
+            <div>
+                <form className="form-horizontal" onSubmit={this.doQuery}>
+                    <fieldset>
+                        <ListGroup>
+                            <ListGroupItem>
+                                <div className="row">
+                                    <div className="form-group col-sm-6">
+                                        <label className="control-label text-semibold col-sm-4 col-md-3">Project ID</label>
+                                        <div className="col-sm-8 col-md-9">
+                                            <input type='number' name='name' ref={ref => this.pid = ref} placeholder='ID Number' className="form-control" />
+                                        </div>
+                                    </div>
+                                    <div className="form-group col-sm-6">
+                                        <label className="control-label text-semibold col-sm-4 col-md-3">Description</label>
+                                        <div className="col-sm-8 col-md-9">
+                                            <input type='text' name='name' ref={ref => this.desc = ref} placeholder='Description' className="form-control" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="row">
+                                    <div className="form-group col-sm-6">
+                                        <label className="control-label text-semibold col-sm-4 col-md-3">Type</label>
+                                        <div className="col-sm-8 col-md-9">
+                                            <input type='text' name='name' ref={ref => this.type = ref} placeholder='Type' className="form-control" />
+                                        </div>
+                                    </div>
+                                    <div className="form-group col-sm-6">
+                                        <label className="control-label text-semibold col-sm-4 col-md-3">Amount</label>
+                                        <div className="col-sm-5 col-md-6">
+                                            <input type='number' name='name' ref={ref => this.amt = ref} placeholder='Amount' className="form-control" />
+                                        </div>
+                                       <div className="col-sm-3 col-md-3">
+                                            <FormControl componentClass="select" inputRef={ref => this.relation = ref}>
+                                                <option value="=">{"="}</option>
+                                                <option value=">=">{">="}</option>
+                                                <option value="<=">{"<="}</option>
+                                            </FormControl>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="row">
+                                    <div className="form-group col-sm-6">
+                                        <ControlLabel className="col-sm-4 col-md-3">Group By</ControlLabel>
+                                        <div className="col-sm-8 col-md-9">
+                                            <FormControl componentClass="select" inputRef={ref => this.group = ref}>
+                                                <option value="NONE">None</option>
+                                                <option value="TYPE">Type</option>
+                                            </FormControl>
+                                        </div>
+                                    </div>
+                                    <div className="form-group col-sm-6">
+                                        <ControlLabel className="col-sm-4 col-md-3">Aggregation</ControlLabel>
+                                        <div className="col-sm-8 col-md-9">
+                                            <FormControl componentClass="select" inputRef={ref => this.aggr = ref}>
+                                                <option value="COUNT">Count</option>
+                                                <option value="AVG">Average Amount</option>
+                                                <option value="MAX">Max Amount</option>
+                                                <option value="MIN">Min Amount</option>
+                                                <option value="SUM">Sum of Amounts</option>
+                                            </FormControl>
+                                        </div>
+                                    </div>
+                                    <div className="form-group col-sm-12">
+                                        <div className="form-group col-sm-12">
+                                            <div className=" col-xs-12 text-center">
+                                                <input type="submit" className="btn btn-success" value="Search" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </ListGroupItem>
+                        </ListGroup>
+                    </fieldset>
+                </form>
+            </div>
+        )
+
+        return (
+            <Grid fluid={true}>
+                <Row>
+                     <Col xs={10}>
+                        {formBody}
+                    </Col>
+                    <Col xs={2}>
+                        <ModalOpen eventListener={button} modalBody={newExpenditure} />
+                    </Col>
+                </Row>
+                <Row>
+                    <Col xs={12}>
+                        <div className="table-responsive">
+                            <JsonTable className="table" rows={this.state.aggregation} />
+                        </div>
+                    </Col>
+                    <Col xs={12}>
+                        <div className="table-responsive">
+                            <JsonTable className="table" columns={columns} rows={this.state.rows} />
+                        </div>
+                    </Col>
+                </Row>
+            </Grid>
+        )
+    }
+}
+import React, { Component } from 'react';
+let request = require('request-promise-native');
+import { ListGroup, ListGroupItem } from 'react-bootstrap';
+
+export default class NewProjectForm extends Component {
+
+    constructor(props) {
+        super(props);
+        this.state = {
+            errors: {},
+            rows: []
+        };
+        this.doQuery = this.doQuery.bind(this);
+    }
+
+
+    doQuery(e) {
+        e.preventDefault();
+        let name = this.pname.value || null;
+        let budget = parseInt(this.pbudget.value, 10) || null;
+        let description = this.pdescription.value || null;
+        if (name === null || budget === null || description === null) { return; }
+        let query = "SELECT MAX(P.PID) FROM ProjectBudget p";
+        let options = {
+            uri: 'http://localhost:9000/query/' + encodeURI(query),
+            headers: {
+                'User-Agent': 'Request-Promise'
+            },
+            json: true
+        };
+        request(options)
+            .then(function (body) {
+                let maxID = body.rows[0]["MAX(P.PID)"] + 1;
+                query = "INSERT INTO ProjectBudget VALUES (" + maxID + ", '" + name + "', " + budget + ", '" + description + "')";
+                let options = {
+                    uri: 'http://localhost:9000/query/' + encodeURI(query),
+                    headers: {
+                        'User-Agent': 'Request-Promise'
+                    },
+                    json: true
+                };
+                request(options)
+                    .then(function (body) {
+                        alert("Added " + name + " project!");
+                    })
+                    .catch(function (err) {
+                        console.error(err);
+                        alert("Failed to add project.")
+                    });
+            })
+            .catch(function (err) {
+                console.error(err);
+            });
+    }
+
+    render() {
+        const formBody = (
+            <div>
+                <form className="form-horizontal" onSubmit={this.doQuery}>
+                    <fieldset>
+                        <ListGroup>
+                            <ListGroupItem>
+                                <div className="row">
+                                    <div className="form-group col-sm-6">
+                                        <label className="control-label text-semibold col-sm-4 col-md-3">Project Name</label>
+                                        <div className="col-sm-8 col-md-9">
+                                            <input type='text' name='name' ref={ref => this.pname = ref} placeholder='Project Name' className="form-control" />
+                                        </div>
+                                    </div>
+                                    <div className="form-group col-sm-6">
+                                        <label className="control-label text-semibold col-sm-4 col-md-3">Budget</label>
+                                        <div className="col-sm-8 col-md-9">
+                                            <input type='number' name='name' ref={ref => this.pbudget = ref} placeholder='$$$$' className="form-control" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="row">
+                                    <div className="form-group col-sm-12">
+                                        <label className="control-label text-semibold col-sm-4 col-md-3">Project Description</label>
+                                        <div className="col-sm-8 col-md-9">
+                                            <textarea className="form-control" ref={ref => this.pdescription = ref} placeholder="Project Description"></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                            </ListGroupItem>
+                            <ListGroupItem>
+                                <div className="row">
+                                    <div className="form-group col-sm-12">
+                                        <div className=" col-xs-12 text-center">
+                                            <input type="submit" className="btn btn-success" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </ListGroupItem>
+                        </ListGroup>
+                    </fieldset>
+
+                </form>
+            </div>
+        )
+
+        return (
+            formBody
+        );
+    }
+}
+import React, { Component } from 'react';
+let request = require('request-promise-native');
+import { ListGroup, ControlLabel, FormControl, ListGroupItem } from 'react-bootstrap';
+
+export default class NewWorkerForm extends Component {
+
+    constructor(props) {
+        super(props);
+        this.state = {
+            errors: {},
+            rows: []
+        };
+        this.doQuery = this.doQuery.bind(this);
+    }
+
+
+    doQuery(e) {
+        e.preventDefault();
+        let table = this.wtype.value;
+        let name = this.wname.value || null;
+        let phone = this.wphone.value || null;
+        if (name === null || phone === null) { return; }
+        let query = "SELECT MAX(w.id) FROM worker w";
+        let options = {
+            uri: 'http://localhost:9000/query/' + encodeURI(query),
+            headers: {
+                'User-Agent': 'Request-Promise'
+            },
+            json: true
+        };
+        request(options)
+            .then(function (body) {
+                let maxID = body.rows[0]["MAX(W.ID)"] + 1;
+                query = "INSERT INTO Worker VALUES (" + maxID + ", '" + name + "', '" + phone + "')";
+                let options = {
+                    uri: 'http://localhost:9000/query/' + encodeURI(query),
+                    headers: {
+                        'User-Agent': 'Request-Promise'
+                    },
+                    json: true
+                };
+                request(options)
+                    .then(function (body) {
+                        switch (table) {
+                            case "employee":
+                                query = "INSERT INTO employee VALUES (" + maxID + ", 11)";
+                                break;
+                            case "manager":
+                                query = "INSERT INTO manager VALUES (" + maxID + ", 1)";
+                                break;
+                            case "president":
+                                query = "INSERT INTO president VALUES (" + maxID + ")";
+                                break;
+                            default:
+                                break;
+                        }
+                        let options = {
+                            uri: 'http://localhost:9000/query/' + encodeURI(query),
+                            headers: {
+                                'User-Agent': 'Request-Promise'
+                            },
+                            json: true
+                        };
+                        request(options)
+                            .then(function (body) {
+                                alert("Added " + table + "!");
+                            })
+                            .catch(function (err) {
+                                console.error(err);
+                            });
+                    })
+                    .catch(function (err) {
+                        console.error(err);
+                        alert("Error; please try another Phone Number.")
+                    });
+            })
+            .catch(function (err) {
+                console.error(err);
+            });
+    }
+
+    render() {
+        const formBody = (
+            <div>
+                <form className="form-horizontal" onSubmit={this.doQuery}>
+                    <fieldset>
+                        <ListGroup>
+                            <ListGroupItem>
+                                <div className="row">
+                                    <div className="form-group col-sm-6">
+                                        <label className="control-label text-semibold col-sm-4 col-md-3">Full Name</label>
+                                        <div className="col-sm-8 col-md-9">
+                                            <input type='text' name='name' ref={ref => this.wname = ref} placeholder='Full Name' className="form-control" />
+                                        </div>
+                                    </div>
+                                    <div className="form-group col-sm-6">
+                                        <label className="control-label text-semibold col-sm-4 col-md-3">Phone Number</label>
+                                        <div className="col-sm-8 col-md-9">
+                                            <input type='text' name='name' ref={ref => this.wphone = ref} placeholder='Phone' className="form-control" />
+                                        </div>
+                                    </div>
+                                    <div className="form-group col-sm-6">
+                                        <ControlLabel className="col-sm-8 col-md-9">Type</ControlLabel>
+                                        <div className="col-sm-8 col-md-9 col-md-offset-9">
+                                            <FormControl componentClass="select" inputRef={ref => this.wtype = ref} placeholder="select">
+                                                <option value="employee">Employee</option>
+                                                <option value="manager">Manager</option>
+                                                <option value="president">President</option>
+                                            </FormControl>
+                                        </div>
+                                    </div>
+                                </div>
+                            </ListGroupItem>
+                            <ListGroupItem>
+                                <div className="row">
+                                    <div className="form-group col-sm-12">
+                                        <div className=" col-xs-12 text-center">
+                                            <input type="submit" className="btn btn-success" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </ListGroupItem>
+                        </ListGroup>
+                    </fieldset>
+
+                </form>
+            </div>
+        )
+
+        return (
+            formBody
+        );
+    }
+}
+import React, { Component } from 'react';
+let request = require('request-promise-native');
+import { Grid, Row, Col, Modal, ListGroup, ControlLabel, FormControl, Button, ListGroupItem } from 'react-bootstrap';
+import { NavLink } from 'react-router-dom'
+import JsonTable from 'react-json-table';
+import ModalOpen from '../Modal'
+import NewProjectForm from './newProjectForm'
+
+
+
+export default class ViewProjects extends Component {
+
+    constructor(props) {
+        super(props);
+        this.state = {
+            errors: {},
+            rows: [],
+            aggregation: [],
+            showModal: false
+        };
+        this.close = this.close.bind(this);
+        this.open = this.open.bind(this);
+        this.doQuery = this.doQuery.bind(this);
+        this.onClickRow = this.onClickRow.bind(this);
+        this.onClickUpdate = this.onClickUpdate.bind(this);
+        this.onClickDelete = this.onClickDelete.bind(this);
+        this.onClickView = this.onClickView.bind(this);
+    }
+
+    componentWillMount() {
+        let query = "SELECT * from ProjectBudget";
+        let options = {
+            uri: 'http://localhost:9000/query/' + encodeURI(query),
+            headers: {
+                'User-Agent': 'Request-Promise'
+            },
+            json: true
+        };
+        let self = this;
+        request(options)
+            .then(function (body) {
+                self.setState({
+                    rows: body.rows
+                });
+                query = "SELECT COUNT(*) FROM ProjectBudget";
+                options = {
+                    uri: 'http://localhost:9000/query/' + encodeURI(query),
+                    headers: {
+                        'User-Agent': 'Request-Promise'
+                    },
+                    json: true
+                };
+                request(options)
+                    .then(function (body) {
+                        console.log(body);
+                        for (let i = 0; i < body.rows.length; i++) {
+                            body.rows[i]["COUNT"] = body.rows[i]["COUNT(*)"];
+                            delete body.rows[i]["COUNT(*)"];
+                        }
+                        self.setState({
+                            aggregation: body.rows
+                        });
+                    })
+                    .catch(function (err) {
+                        console.error(err);
+                    });
+            })
+            .catch(function (err) {
+                console.error(err);
+            });
+    }
+
+    close() {
+        this.setState({ showModal: false });
+    }
+
+    open() {
+        this.setState({ showModal: true });
+    }
+
+    onClickRow(e, data) {
+        console.log(e);
+        console.log(data);
+        this.open();
+        this.setState({ modalData: data });
+    }
+
+    doQuery(e) {
+        if (e) { e.preventDefault(); }
+        let id = this.pid.value || null;
+        let name = this.pname.value || null;
+        let aggr = this.waggr.value || null;
+        let querySuffix = " FROM ProjectBudget p"
+        let filter = [];
+        if (id) { filter.push("p.pid=" + id); }
+        if (name) { filter.push("LOWER(p.name) LIKE LOWER('%" + name + "%')"); }
+        if (filter.length !== 0) { querySuffix += " WHERE " + filter.join(" AND "); }
+        let self = this;
+        let options = {
+            uri: 'http://localhost:9000/query/' + encodeURI("SELECT *" + querySuffix),
+            headers: {
+                'User-Agent': 'Request-Promise'
+            },
+            json: true
+        };
+        request(options)
+            .then(function (body) {
+                console.log(body);
+                self.setState({
+                    rows: body.rows
+                });
+                let aggrQuery = "";
+                switch (aggr) {
+                    case "COUNT":
+                        aggrQuery = aggr + "(*)";
+                        break;
+                    case "AVG":
+                    case "MAX":
+                    case "MIN":
+                    case "SUM":
+                        aggrQuery = aggr + "(P.BUDGET)";
+                        break;
+                    default:
+                        break;
+                }
+                let options = {
+                    uri: 'http://localhost:9000/query/' + encodeURI("SELECT " + aggrQuery + querySuffix),
+                    headers: {
+                        'User-Agent': 'Request-Promise'
+                    },
+                    json: true
+                };
+                request(options)
+                    .then(function (body) {
+                        console.log(body);
+                        for (let i = 0; i < body.rows.length; i++) {
+                            body.rows[i][aggr] = body.rows[i][aggrQuery];
+                            delete body.rows[i][aggrQuery];
+                        }
+                        self.setState({
+                            aggregation: body.rows
+                        });
+                    })
+                    .catch(function (err) {
+                        console.error(err);
+                    });
+            })
+            .catch(function (err) {
+                console.error(err);
+            });
+    }
+
+    onClickUpdate() {
+        let pid = this.peditId.value || null;
+        if (!pid) { return (console.error("PID is null...")); }
+        let name = this.peditName.value || null;
+        let budg = this.peditBudget.value || null;
+        let desc = this.pdescription.value || null;
+
+        let update = "";
+        if (name && (name !== this.state.modalData.NAME)) {
+            update = "p.name='" + name + "'";
+        }
+        if (budg && (budg !== this.state.modalData.BUDGET)) {
+            let set = "p.budget='" + budg + "'";
+            update = update ? update + ", " + set : set;
+        }
+        if (desc && (desc !== this.state.modalData.DESCRIPTION)) {
+            let set = "p.description='" + desc + "'";
+            update = update ? update + ", " + set : set;
+        }
+        if (!update) { return (alert("No changes to update!")); }
+
+        let query = "UPDATE projectbudget p SET " + update + " WHERE p.pid=" + pid;
+        let self = this;
+        let options = {
+            uri: 'http://localhost:9000/query/' + encodeURI(query),
+            headers: {
+                'User-Agent': 'Request-Promise'
+            },
+            json: true
+        };
+        request(options)
+            .then(function (body) {
+                console.log(body);
+                self.doQuery();
+                self.close();
+            })
+            .catch(function (err) {
+                console.error(err);
+            });
+    }
+
+    onClickDelete() {
+        let id = this.peditId.value || null;
+        if (!id) { return (console.error("ID is null...")); }
+
+        let query = "DELETE FROM projectbudget p WHERE p.pid=" + id;
+        let self = this;
+        let options = {
+            uri: 'http://localhost:9000/query/' + encodeURI(query),
+            headers: {
+                'User-Agent': 'Request-Promise'
+            },
+            json: true
+        };
+        request(options)
+            .then(function (body) {
+                console.log(body);
+                self.doQuery();
+                self.close();
+            })
+            .catch(function (err) {
+                console.error(err);
+            });
+    }
+
+    onClickView() {
+        window.location = "/president/workers?pid=" + this.state.modalData.PID;
+    }
+
+    render() {
+        const button = (<Button bsStyle="success">Add New Project </Button>)
+        const newProjectForm = <NewProjectForm />
+
+        const formBody = (
+            <div>
+                <form className="form-horizontal" onSubmit={this.doQuery}>
+                    <fieldset>
+                        <ListGroup>
+                            <ListGroupItem>
+                                <div className="row">
+                                    <div className="form-group col-sm-6">
+                                        <label className="control-label text-semibold col-sm-4 col-md-3">Id Number</label>
+                                        <div className="col-sm-8 col-md-9">
+                                            <input type='number' name='name' ref={ref => this.pid = ref} placeholder='ID Number' className="form-control" />
+                                        </div>
+                                    </div>
+                                    <div className="form-group col-sm-6">
+                                        <label className="control-label text-semibold col-sm-4 col-md-3">Project Name</label>
+                                        <div className="col-sm-8 col-md-9">
+                                            <input type='text' name='name' ref={ref => this.pname = ref} placeholder='Project Name' className="form-control" />
+                                        </div>
+                                    </div>
+                                    <div className="form-group col-sm-6">
+                                        <ControlLabel className="col-sm-4 col-md-3">Aggregation:</ControlLabel>
+                                        <div className="col-sm-8 col-md-9">
+                                            <FormControl componentClass="select" inputRef={ref => this.waggr = ref}>
+                                                <option value="COUNT">Count</option>
+                                                <option value="AVG">Average Budget</option>
+                                                <option value="MAX">Max Budget</option>
+                                                <option value="MIN">Min Budget</option>
+                                                <option value="SUM">Sum of Budgets</option>
+                                            </FormControl>
+                                        </div>
+                                    </div>
+                                    <div className="form-group col-sm-12">
+                                        <div className="form-group col-sm-12">
+                                            <div className=" col-xs-12 text-center">
+                                                <input type="submit" className="btn btn-success" value="Search" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </ListGroupItem>
+                        </ListGroup>
+                    </fieldset>
+                </form>
+            </div>
+        )
+        let modalBody = null;
+        if (this.state.modalData) {
+            modalBody = (
+                <div>
+                    <form className="form-horizontal" onSubmit={this.doQuery}>
+                        <fieldset>
+                            <div className="row">
+                                <div className="form-group col-sm-6">
+                                    <label className="control-label text-semibold col-sm-4 col-md-3">Id Number</label>
+                                    <div className="col-sm-8 col-md-9">
+                                        <input type='number' disabled name='name' ref={ref => this.peditId = ref} placeholder='ID Number' defaultValue={this.state.modalData.PID} className="form-control" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="row">
+                                <div className="form-group col-sm-6">
+                                    <label className="control-label text-semibold col-sm-4 col-md-3">Budget</label>
+                                    <div className="col-sm-8 col-md-9">
+                                        <input type='number' name='name' ref={ref => this.peditBudget = ref} placeholder='1234' defaultValue={this.state.modalData.BUDGET} className="form-control" />
+                                    </div>
+                                </div>
+                                <div className="form-group col-sm-6">
+                                    <label className="control-label text-semibold col-sm-4 col-md-3">Project Name</label>
+                                    <div className="col-sm-8 col-md-9">
+                                        <input type='text' name='name' ref={ref => this.peditName = ref} placeholder='Project Name' defaultValue={this.state.modalData.NAME} className="form-control" />
+                                    </div>
+                                </div>
+                                <div className="form-group col-sm-12">
+                                    <label className="control-label text-semibold col-sm-4 col-md-3">Project Description</label>
+                                    <div className="col-sm-8 col-md-9">
+                                        <textarea ref={ref => this.pdescription = ref} className="form-control" placeholder="Project Description" defaultValue={this.state.modalData.DESCRIPTION} maxLength={1000} ></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </form>
+                </div>
+            )
+        }
+
+        return (
+            <Grid fluid={true}>
+                <Modal show={this.state.showModal} bsSize="large" onHide={this.close}>
+                    <Modal.Header closeButton>
+                    </Modal.Header>
+                    <Modal.Body>
+                        {modalBody}
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <Button bsStyle="info" onClick={this.onClickView}>
+                                View project workers
+                        </Button> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <Button bsStyle="success" onClick={this.onClickUpdate}>
+                            Update
+                        </Button>
+                        <Button bsStyle="danger" onClick={this.onClickDelete}>
+                            Delete
+                        </Button>
+                    </Modal.Footer>
+                </Modal>
+                <Row>
+                    <Col xs={10}>
+                        {formBody}
+                    </Col>
+                    <Col xs={2}>
+                        <ModalOpen eventListener={button} modalBody={newProjectForm} />
+                    </Col>
+                </Row>
+                <Row>
+                    <Col xs={12}>
+                        <div className="table-responsive">
+                            <JsonTable className="table" rows={this.state.aggregation} />
+                        </div>
+                    </Col>
+                    <Col xs={12}>
+                        <div className="table-responsive">
+                            <JsonTable className="table" rows={this.state.rows} onClickRow={this.onClickRow} />
+                        </div>
+                    </Col>
+                </Row>
+            </Grid>
+        )
+    }
+}
+import React, { Component } from 'react';
+let request = require('request-promise-native');
+import { Grid, Row, Col, ListGroup, ControlLabel, FormControl, Button, ListGroupItem, FormGroup, Checkbox } from 'react-bootstrap';
+import JsonTable from 'react-json-table';
+import ModalOpen from '../Modal'
+import NewProjectForm from './newProjectForm'
+
+
+
+export default class ViewWorkerProject extends Component {
+
+    constructor(props) {
+        super(props);
+        this.state = {
+            errors: {},
+            rows: []
+        };
+        this.doQuery = this.doQuery.bind(this);
+    }
+
+    componentWillMount() {
+        let query = "SELECT pb.PID as ProjectId, pb.NAME as Project, w.ID as WorkerID, w.NAME as Name from Worker w, ProjectManager pm, ProjectBudget pb WHERE (pm.PID = pb.PID AND pm.man_ID = w.ID)"
+        let options = {
+            uri: 'http://localhost:9000/query/' + encodeURI(query),
+            headers: {
+                'User-Agent': 'Request-Promise'
+            },
+            json: true // Automatically parses the JSON string in the response 
+        };
+        let self = this;
+        request(options)
+            .then(function (body) {
+                console.log(body);
+                self.setState({
+                    managers: body.rows
+                });
+            })
+            .catch(function (err) {
+                // API call failed... 
+                console.error(err);
+            });
+
+        let query2 = "SELECT pb.PID as ProjectId, pb.NAME as Project, w.ID as WorkerID, w.NAME as Name, pe.Role as ROLE from Worker w, ProjectAssignedToEmployee pe, ProjectBudget pb WHERE (pe.PID = pb.PID AND pe.emp_ID = w.ID)"
+        let options2 = {
+            uri: 'http://localhost:9000/query/' + encodeURI(query2),
+            headers: {
+                'User-Agent': 'Request-Promise'
+            },
+            json: true // Automatically parses the JSON string in the response 
+        };
+        request(options2)
+            .then(function (body2) {
+                console.log(body2);
+                self.setState({
+                    employees: body2.rows
+                });
+            })
+            .catch(function (err2) {
+                // API call failed... 
+                console.error(err2);
+            });
+    }
+
+
+    doQuery(e) {
+        e.preventDefault();
+        let id = this.pid.value || null;
+        let queryType = this.queryType.value || null;
+        let query = {};
+        let self = this;
+        if (queryType && queryType == "IN") {
+            if (id) {
+                let query = "SELECT pb.PID as ProjectId, pb.NAME as Project, w.ID as WorkerID, w.NAME as Name from Worker w, ProjectManager pm, ProjectBudget pb WHERE (pm.PID = pb.PID AND pm.man_ID = w.ID) AND pb.PID =" + id;
+                let options = {
+                    uri: 'http://localhost:9000/query/' + encodeURI(query),
+                    headers: {
+                        'User-Agent': 'Request-Promise'
+                    },
+                    json: true // Automatically parses the JSON string in the response 
+                };
+                let self = this;
+                request(options)
+                    .then(function (body) {
+                        console.log(body);
+                        self.setState({
+                            managers: body.rows
+                        });
+                    })
+                    .catch(function (err) {
+                        // API call failed... 
+                        console.error(err);
+                    });
+
+                let query2 = "SELECT pb.PID as ProjectId, pb.NAME as Project, w.ID as WorkerID, w.NAME as Name, pe.Role as ROLE from Worker w, ProjectAssignedToEmployee pe, ProjectBudget pb WHERE (pe.PID = pb.PID AND pe.emp_ID = w.ID)  AND pb.PID =" + id
+                let options2 = {
+                    uri: 'http://localhost:9000/query/' + encodeURI(query2),
+                    headers: {
+                        'User-Agent': 'Request-Promise'
+                    },
+                    json: true // Automatically parses the JSON string in the response 
+                };
+                request(options2)
+                    .then(function (body2) {
+                        console.log(body2);
+                        self.setState({
+                            employees: body2.rows
+                        });
+                    })
+                    .catch(function (err2) {
+                        // API call failed... 
+                        console.error(err2);
+                    });
+            } else {
+                let query = "SELECT pb.PID as ProjectId, pb.NAME as Project, w.ID as WorkerID, w.NAME as Name from Worker w, ProjectManager pm, ProjectBudget pb WHERE (pm.PID = pb.PID AND pm.man_ID = w.ID)"
+                let options = {
+                    uri: 'http://localhost:9000/query/' + encodeURI(query),
+                    headers: {
+                        'User-Agent': 'Request-Promise'
+                    },
+                    json: true // Automatically parses the JSON string in the response 
+                };
+                request(options)
+                    .then(function (body) {
+                        console.log(body);
+                        self.setState({
+                            managers: body.rows
+                        });
+                    })
+                    .catch(function (err) {
+                        // API call failed... 
+                        console.error(err);
+                    });
+
+                let query2 = "SELECT pb.PID as ProjectId, pb.NAME as Project, w.ID as WorkerID, w.NAME as Name, pe.Role as ROLE from Worker w, ProjectAssignedToEmployee pe, ProjectBudget pb WHERE (pe.PID = pb.PID AND pe.emp_ID = w.ID)"
+                let options2 = {
+                    uri: 'http://localhost:9000/query/' + encodeURI(query2),
+                    headers: {
+                        'User-Agent': 'Request-Promise'
+                    },
+                    json: true // Automatically parses the JSON string in the response 
+                };
+                request(options2)
+                    .then(function (body) {
+                        console.log(body);
+                        self.setState({
+                            employees: body.rows
+                        });
+                    })
+                    .catch(function (err) {
+                        // API call failed... 
+                        console.error(err);
+                    });
+            }
+        }
+        else if (queryType && queryType == "NOT") {
+            if (id) {
+                let query = "SELECT pb.PID as ProjectId, pb.NAME as Project, w.ID as WorkerID, w.NAME as Name from Worker w, ProjectManager pm, ProjectBudget pb WHERE (pm.PID = pb.PID AND pm.man_ID = w.ID) AND pb.PID <>" + id;
+                let options = {
+                    uri: 'http://localhost:9000/query/' + encodeURI(query),
+                    headers: {
+                        'User-Agent': 'Request-Promise'
+                    },
+                    json: true // Automatically parses the JSON string in the response 
+                };
+                let self = this;
+                request(options)
+                    .then(function (body) {
+                        console.log(body);
+                        self.setState({
+                            managers: body.rows
+                        });
+                    })
+                    .catch(function (err) {
+                        // API call failed... 
+                        console.error(err);
+                    });
+
+                let query2 = "SELECT pb.PID as ProjectId, pb.NAME as Project, w.ID as WorkerID, w.NAME as Name, pe.Role as ROLE from Worker w, ProjectAssignedToEmployee pe, ProjectBudget pb WHERE (pe.PID = pb.PID AND pe.emp_ID = w.ID)  AND pb.PID <>" + id
+                let options2 = {
+                    uri: 'http://localhost:9000/query/' + encodeURI(query2),
+                    headers: {
+                        'User-Agent': 'Request-Promise'
+                    },
+                    json: true // Automatically parses the JSON string in the response 
+                };
+                request(options2)
+                    .then(function (body2) {
+                        console.log(body2);
+                        self.setState({
+                            employees: body2.rows
+                        });
+                    })
+                    .catch(function (err2) {
+                        // API call failed... 
+                        console.error(err2);
+                    });
+            }
+            else {
+                let query = "SELECT m.man_ID as ManagerID, w.NAME as Name from Manager m, Worker w WHERE m.man_ID = w.ID AND m.man_ID NOT IN (select man_ID as ID from ProjectManager)";
+                let options = {
+                    uri: 'http://localhost:9000/query/' + encodeURI(query),
+                    headers: {
+                        'User-Agent': 'Request-Promise'
+                    },
+                    json: true // Automatically parses the JSON string in the response 
+                };
+                request(options)
+                    .then(function (body) {
+                        console.log(body);
+                        self.setState({
+                            managers: body.rows
+                        });
+                    })
+                    .catch(function (err) {
+                        // API call failed... 
+                        console.error(err);
+                    });
+
+                let query2 = "SELECT e.emp_ID as EmployeeID, w.NAME as Name from Employee e, Worker w WHERE e.emp_ID = w.ID AND e.emp_ID NOT IN (select emp_ID as ID from ProjectAssignedToEmployee)";
+                let options2 = {
+                    uri: 'http://localhost:9000/query/' + encodeURI(query2),
+                    headers: {
+                        'User-Agent': 'Request-Promise'
+                    },
+                    json: true // Automatically parses the JSON string in the response 
+                };
+                request(options2)
+                    .then(function (body) {
+                        console.log(body);
+                        self.setState({
+                            employees: body.rows
+                        });
+                    })
+                    .catch(function (err) {
+                        // API call failed... 
+                        console.error(err);
+                    });
+            }
+        }
+    }
+
+
+    render() {
+        const formBody = (
+            <div>
+                <form className="form-horizontal" onSubmit={this.doQuery}>
+                    <fieldset>
+                        <ListGroup>
+                            <ListGroupItem>
+                                <div className="row">
+                                    <div className="form-group col-sm-6">
+                                        <label className="control-label text-semibold col-sm-4 col-md-3">Project Id</label>
+                                        <div className="col-sm-8 col-md-9">
+                                            <input type='number' name='name' ref={ref => this.pid = ref} placeholder='Project Id' className="form-control" />
+                                        </div>
+                                    </div>
+                                    <div className="form-group col-sm-6">
+                                        <ControlLabel className="col-sm-4 col-md-3">Type</ControlLabel>
+                                        <div className="col-sm-8 col-md-9">
+                                            <FormControl componentClass="select" inputRef={ref => this.queryType = ref} placeholder="select">
+                                                <option value="IN">In Project</option>
+                                                <option value="NOT">Not in Project</option>
+                                            </FormControl>
+                                        </div>
+                                    </div>
+                                    <div className="form-group col-sm-12">
+                                        <div className="form-group col-sm-12">
+                                            <div className=" col-xs-12 text-center">
+                                                <input type="submit" className="btn btn-success" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </ListGroupItem>
+                        </ListGroup>
+                    </fieldset>
+                </form>
+            </div>
+        )
+        return (
+            <Grid fluid={true}>
+                <Row>
+                    <Col xs={12}>
+                        {formBody}
+                    </Col>
+                </Row>
+                <Row>
+                    <Col xs={12}>
+                        <h1>Managers</h1>
+                        <div className="table-responsive">
+                            <JsonTable className="table" rows={this.state.managers} />
+                        </div>
+                    </Col>
+                    <Col xs={12}>
+                        <h1>Employees</h1>
+                        <div className="table-responsive">
+                            <JsonTable className="table" rows={this.state.employees} />
+                        </div>
+                    </Col>
+                </Row>
+            </Grid>
+        )
+    }
+}
+import React, { Component } from 'react';
+let request = require('request-promise-native');
+import { Grid, Row, Modal, Col, ListGroup, ControlLabel, FormControl, Button, ListGroupItem } from 'react-bootstrap';
+
+import JsonTable from 'react-json-table';
+import ModalOpen from '../Modal'
+import NewWorkerForm from './newWorkerForm'
+
+const queryString = require('query-string');
+
+export default class ViewWorkers extends Component {
+
+    constructor(props) {
+        super(props);
+        this.state = {
+            errors: {},
+            rows: [],
+            showModal: false
+        };
+        this.close = this.close.bind(this);
+        this.open = this.open.bind(this);
+        this.doQuery = this.doQuery.bind(this);
+        this.onClickRow = this.onClickRow.bind(this);
+        this.onClickUpdate = this.onClickUpdate.bind(this);
+        this.onClickDelete = this.onClickDelete.bind(this);
+    }
+
+    componentWillMount() {
+        const parsed = queryString.parse(this.props.location.search);
+        let projectIDParam = parsed.pid || null;
+        let query = "";
+        console.log(projectIDParam);
+        if (projectIDParam === null) {
+            query = "SELECT * FROM worker";
+        } else {
+            query = "SELECT pb.name AS proj_name , w.id, w.name, w.phonenumber, pa.role " +
+                "FROM worker w, employee e, ProjectAssignedToEmployee pa, ProjectBudget pb " +
+                "WHERE w.id=e.emp_id AND e.emp_id=pa.emp_id AND pa.pid=pb.pid AND pa.pid=" + projectIDParam;
+        }
+        let options = {
+            uri: 'http://localhost:9000/query/' + encodeURI(query),
+            headers: {
+                'User-Agent': 'Request-Promise'
+            },
+            json: true // Automatically parses the JSON string in the response
+        };
+        let self = this;
+        request(options)
+            .then(function (body) {
+                console.log(body);
+                self.setState({
+                    rows: body.rows
+                });
+            })
+            .catch(function (err) {
+                // API call failed...
+                console.error(err);
+            });
+    }
+
+    doQuery(e) {
+        if (e) { e.preventDefault(); }
+        let table = this.wtype.value;
+        let table_id;
+        switch (table) {
+            case "worker":
+                table = "";
+                table_id = "w.id";
+                break;
+            case "employee":
+                table = ", employee e";
+                table_id = "e.emp_id";
+                break;
+            case "manager":
+                table = ", manager m";
+                table_id = "m.man_id";
+                break;
+            case "president":
+                table = ", president p";
+                table_id = "p.pres_id";
+                break;
+            default:
+                break;
+        }
+        let filter = [];
+        let id = this.wid.value || null;
+        let name = this.wname.value || null;
+        let phone = this.wphone.value || null;
+        if (id) {
+            filter.push("w.id=" + id);
+        }
+        if (name) {
+            filter.push("LOWER(w.name) LIKE LOWER('%" + name + "%')");
+        }
+        if (phone) {
+            filter.push("w.phonenumber LIKE '%" + phone + "%'");
+        }
+        let query = "SELECT * FROM worker w" + table + " WHERE w.id=" + table_id;
+        if (filter.length !== 0) {
+            query += " AND " + filter.join(" AND ");
+        }
+        let self = this;
+        let options = {
+            uri: 'http://localhost:9000/query/' + encodeURI(query),
+            headers: {
+                'User-Agent': 'Request-Promise'
+            },
+            json: true // Automatically parses the JSON string in the response
+        };
+        request(options)
+            .then(function (body) {
+                console.log(body);
+                self.setState({
+                    rows: body.rows
+                });
+            })
+            .catch(function (err) {
+                // API call failed...
+                console.error(err);
+            });
+    }
+
+    close() {
+        this.setState({ showModal: false });
+    }
+
+    open() {
+        this.setState({ showModal: true });
+    }
+
+    onClickRow(e, data) {
+        console.log(e);
+        console.log(data);
+        this.open();
+        this.setState({ modalData: data });
+    }
+
+    onClickUpdate() {
+        let id = this.peditId.value || null;
+        if (!id) { return (console.error("ID is null...")); }
+        let name = this.peditName.value || null;
+        let phone = this.peditPhone.value || null;
+
+        let update = "";
+        if (name && (name !== this.state.modalData.NAME)) {
+            update = "w.name='" + name + "'";
+        }
+        if (phone && (phone !== this.state.modalData.PHONENUMBER)) {
+            let set = "w.phonenumber='" + phone + "'";
+            update = update ? update + ", " + set : set;
+        }
+        if (!update) { return (alert("No changes to update!")); }
+
+        let query = "UPDATE worker w SET " + update + " WHERE w.id=" + id;
+        let self = this;
+        let options = {
+            uri: 'http://localhost:9000/query/' + encodeURI(query),
+            headers: {
+                'User-Agent': 'Request-Promise'
+            },
+            json: true
+        };
+        request(options)
+            .then(function (body) {
+                console.log(body);
+                self.doQuery();
+                self.close();
+            })
+            .catch(function (err) {
+                console.error(err);
+            });
+    }
+
+    onClickDelete() {
+        let id = this.peditId.value || null;
+        if (!id) { return (console.error("ID is null...")); }
+
+        let query = "DELETE FROM worker w WHERE w.id=" + id;
+        let self = this;
+        let options = {
+            uri: 'http://localhost:9000/query/' + encodeURI(query),
+            headers: {
+                'User-Agent': 'Request-Promise'
+            },
+            json: true
+        };
+        request(options)
+            .then(function (body) {
+                console.log(body);
+                self.doQuery();
+                self.close();
+            })
+            .catch(function (err) {
+                console.error(err);
+            });
+    }
+
+    render() {
+        const button = (<Button bsStyle="success">Add New Worker </Button>);
+        const newWorkerForm = <NewWorkerForm />;
+        const formBody = (
+            <div>
+                <form className="form-horizontal" onSubmit={this.doQuery}>
+                    <fieldset>
+                        <ListGroup>
+                            <ListGroupItem>
+                                <div className="row">
+                                    <div className="form-group col-sm-6">
+                                        <label className="control-label text-semibold col-sm-4 col-md-3">Worker
+                                            Id</label>
+                                        <div className="col-sm-8 col-md-9">
+                                            <input type='number' name='wid' ref={ref => this.wid = ref}
+                                                placeholder='Worker Id' className="form-control" />
+                                        </div>
+                                    </div>
+                                    <div className="form-group col-sm-6">
+                                        <label className="control-label text-semibold col-sm-4 col-md-3">Full
+                                            Name</label>
+                                        <div className="col-sm-8 col-md-9">
+                                            <input type='text' name='wname' ref={ref => this.wname = ref}
+                                                placeholder='Full Name' className="form-control" />
+                                        </div>
+                                    </div>
+                                    <div className="form-group col-sm-6">
+                                        <label className="control-label text-semibold col-sm-4 col-md-3">Phone
+                                            Number</label>
+                                        <div className="col-sm-8 col-md-9">
+                                            <input type='text' name='name' ref={ref => this.wphone = ref}
+                                                placeholder='Phone Number' className="form-control" />
+                                        </div>
+                                    </div>
+                                    <div className="form-group col-sm-6">
+                                        <ControlLabel className="col-sm-4 col-md-3">Type</ControlLabel>
+                                        <div className="col-sm-8 col-md-9">
+                                            <FormControl componentClass="select" inputRef={ref => this.wtype = ref}
+                                                placeholder="select">
+                                                <option value="worker">ALL</option>
+                                                <option value="president">President</option>
+                                                <option value="manager">Manager</option>
+                                                <option value="employee">Employee</option>
+                                            </FormControl>
+                                        </div>
+                                    </div>
+                                </div>
+                            </ListGroupItem>
+                            <ListGroupItem>
+                                <div className="row">
+                                    <div className="row">
+                                        <div className="form-group col-sm-12">
+                                            <div className=" col-xs-12 text-center">
+                                                <input type="submit" className="btn btn-success" value="Search" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </ListGroupItem>
+                        </ListGroup>
+                    </fieldset>
+                </form>
+            </div>
+        );
+        let modalBody = null;
+        if (this.state.modalData) {
+            modalBody = (
+                <div>
+                    <form className="form-horizontal" onSubmit={this.doQuery}>
+                        <fieldset>
+                            <div className="row">
+                                <div className="form-group col-sm-6">
+                                    <label className="control-label text-semibold col-sm-4 col-md-3">Id Number</label>
+                                    <div className="col-sm-8 col-md-9">
+                                        <input type='number' disabled name='name' ref={ref => this.peditId = ref} placeholder='ID Number' defaultValue={this.state.modalData.ID} className="form-control" />
+                                    </div>
+                                </div>
+                                <div className="form-group col-sm-6">
+                                    <label className="control-label text-semibold col-sm-4 col-md-3">Full Name</label>
+                                    <div className="col-sm-8 col-md-9">
+                                        <input type='text' name='name' ref={ref => this.peditName = ref} placeholder='Full Name' defaultValue={this.state.modalData.NAME} maxLength={25} className="form-control" />
+                                    </div>
+                                </div>
+                                <div className="form-group col-sm-6">
+                                    <label className="control-label text-semibold col-sm-4 col-md-3">Phone Number</label>
+                                    <div className="col-sm-8 col-md-9">
+                                        <input type='text' name='name' ref={ref => this.peditPhone = ref} placeholder='Phone Number' defaultValue={this.state.modalData.PHONENUMBER} maxLength={13} className="form-control" />
+                                    </div>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </form>
+                </div>
+            )
+        }
+        return (
+            <Grid fluid={true}>
+                <Modal show={this.state.showModal} bsSize="large" onHide={this.close}>
+                    <Modal.Header closeButton>
+                    </Modal.Header>
+                    <Modal.Body>
+                        {modalBody}
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <Button bsStyle="success" onClick={this.onClickUpdate}>
+                            Update
+                            </Button>
+                        <Button bsStyle="danger" onClick={this.onClickDelete}>
+                            Delete
+                            </Button>
+                    </Modal.Footer>
+                </Modal>
+                <Row>
+                    <Col xs={10}>
+                        {formBody}
+                    </Col>
+                    <Col xs={2}>
+                        <ModalOpen eventListener={button} modalBody={newWorkerForm} />
+                    </Col>
+                </Row>
+                <Row>
+                    <Col xs={12}>
+                        <div className="table-responsive">
+                            <JsonTable className="table" rows={this.state.rows} onClickRow={this.onClickRow} />
+                        </div>
+                    </Col>
+                </Row>
+            </Grid>
+        );
+    }
+}
