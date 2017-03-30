@@ -68,92 +68,174 @@ export default class ViewWorkerProject extends Component {
         let queryType = this.queryType.value || null;
         let query = {};
         let self = this;
-        if (queryType && queryType == "IN" && id) {
-            let query = "SELECT pb.PID as ProjectId, pb.NAME as Project, w.ID as WorkerID, w.NAME as Name from Worker w, ProjectManager pm, ProjectBudget pb WHERE (pm.PID = pb.PID AND pm.man_ID = w.ID) AND pb.PID =" + id;
-            let options = {
-                uri: 'http://localhost:9000/query/' + encodeURI(query),
-                headers: {
-                    'User-Agent': 'Request-Promise'
-                },
-                json: true // Automatically parses the JSON string in the response 
-            };
-            let self = this;
-            request(options)
-                .then(function (body) {
-                    console.log(body);
-                    self.setState({
-                        managers: body.rows
+        if (queryType && queryType == "IN") {
+            if (id) {
+                let query = "SELECT pb.PID as ProjectId, pb.NAME as Project, w.ID as WorkerID, w.NAME as Name from Worker w, ProjectManager pm, ProjectBudget pb WHERE (pm.PID = pb.PID AND pm.man_ID = w.ID) AND pb.PID =" + id;
+                let options = {
+                    uri: 'http://localhost:9000/query/' + encodeURI(query),
+                    headers: {
+                        'User-Agent': 'Request-Promise'
+                    },
+                    json: true // Automatically parses the JSON string in the response 
+                };
+                let self = this;
+                request(options)
+                    .then(function (body) {
+                        console.log(body);
+                        self.setState({
+                            managers: body.rows
+                        });
+                    })
+                    .catch(function (err) {
+                        // API call failed... 
+                        console.error(err);
                     });
-                })
-                .catch(function (err) {
-                    // API call failed... 
-                    console.error(err);
-                });
 
-            let query2 = "SELECT pb.PID as ProjectId, pb.NAME as Project, w.ID as WorkerID, w.NAME as Name, pe.Role as ROLE from Worker w, ProjectAssignedToEmployee pe, ProjectBudget pb WHERE (pe.PID = pb.PID AND pe.emp_ID = w.ID)  AND pb.PID =" + id
-            let options2 = {
-                uri: 'http://localhost:9000/query/' + encodeURI(query2),
-                headers: {
-                    'User-Agent': 'Request-Promise'
-                },
-                json: true // Automatically parses the JSON string in the response 
-            };
-            request(options2)
-                .then(function (body2) {
-                    console.log(body2);
-                    self.setState({
-                        employees: body2.rows
+                let query2 = "SELECT pb.PID as ProjectId, pb.NAME as Project, w.ID as WorkerID, w.NAME as Name, pe.Role as ROLE from Worker w, ProjectAssignedToEmployee pe, ProjectBudget pb WHERE (pe.PID = pb.PID AND pe.emp_ID = w.ID)  AND pb.PID =" + id
+                let options2 = {
+                    uri: 'http://localhost:9000/query/' + encodeURI(query2),
+                    headers: {
+                        'User-Agent': 'Request-Promise'
+                    },
+                    json: true // Automatically parses the JSON string in the response 
+                };
+                request(options2)
+                    .then(function (body2) {
+                        console.log(body2);
+                        self.setState({
+                            employees: body2.rows
+                        });
+                    })
+                    .catch(function (err2) {
+                        // API call failed... 
+                        console.error(err2);
                     });
-                })
-                .catch(function (err2) {
-                    // API call failed... 
-                    console.error(err2);
-                });
-        }
-        else if (queryType && queryType == "NOT" && id) {
-            let query = "SELECT pb.PID as ProjectId, pb.NAME as Project, w.ID as WorkerID, w.NAME as Name from Worker w, ProjectManager pm, ProjectBudget pb WHERE (pm.PID = pb.PID AND pm.man_ID = w.ID) AND pb.PID <>" + id;
-            let options = {
-                uri: 'http://localhost:9000/query/' + encodeURI(query),
-                headers: {
-                    'User-Agent': 'Request-Promise'
-                },
-                json: true // Automatically parses the JSON string in the response 
-            };
-            let self = this;
-            request(options)
-                .then(function (body) {
-                    console.log(body);
-                    self.setState({
-                        managers: body.rows
+            } else {
+                let query = "SELECT pb.PID as ProjectId, pb.NAME as Project, w.ID as WorkerID, w.NAME as Name from Worker w, ProjectManager pm, ProjectBudget pb WHERE (pm.PID = pb.PID AND pm.man_ID = w.ID)"
+                let options = {
+                    uri: 'http://localhost:9000/query/' + encodeURI(query),
+                    headers: {
+                        'User-Agent': 'Request-Promise'
+                    },
+                    json: true // Automatically parses the JSON string in the response 
+                };
+                request(options)
+                    .then(function (body) {
+                        console.log(body);
+                        self.setState({
+                            managers: body.rows
+                        });
+                    })
+                    .catch(function (err) {
+                        // API call failed... 
+                        console.error(err);
                     });
-                })
-                .catch(function (err) {
-                    // API call failed... 
-                    console.error(err);
-                });
 
-            let query2 = "SELECT pb.PID as ProjectId, pb.NAME as Project, w.ID as WorkerID, w.NAME as Name, pe.Role as ROLE from Worker w, ProjectAssignedToEmployee pe, ProjectBudget pb WHERE (pe.PID = pb.PID AND pe.emp_ID = w.ID)  AND pb.PID <>" + id
-            let options2 = {
-                uri: 'http://localhost:9000/query/' + encodeURI(query2),
-                headers: {
-                    'User-Agent': 'Request-Promise'
-                },
-                json: true // Automatically parses the JSON string in the response 
-            };
-            request(options2)
-                .then(function (body2) {
-                    console.log(body2);
-                    self.setState({
-                        employees: body2.rows
+                let query2 = "SELECT pb.PID as ProjectId, pb.NAME as Project, w.ID as WorkerID, w.NAME as Name, pe.Role as ROLE from Worker w, ProjectAssignedToEmployee pe, ProjectBudget pb WHERE (pe.PID = pb.PID AND pe.emp_ID = w.ID)"
+                let options2 = {
+                    uri: 'http://localhost:9000/query/' + encodeURI(query2),
+                    headers: {
+                        'User-Agent': 'Request-Promise'
+                    },
+                    json: true // Automatically parses the JSON string in the response 
+                };
+                request(options2)
+                    .then(function (body) {
+                        console.log(body);
+                        self.setState({
+                            employees: body.rows
+                        });
+                    })
+                    .catch(function (err) {
+                        // API call failed... 
+                        console.error(err);
                     });
-                })
-                .catch(function (err2) {
-                    // API call failed... 
-                    console.error(err2);
-                });
+            }
         }
-        else{
-            // NIXON: SELECT ALL WORKERS AND MANAGERS THAT ARE NOT IN ANY PROJECT
+        else if (queryType && queryType == "NOT") {
+            if (id) {
+                let query = "SELECT pb.PID as ProjectId, pb.NAME as Project, w.ID as WorkerID, w.NAME as Name from Worker w, ProjectManager pm, ProjectBudget pb WHERE (pm.PID = pb.PID AND pm.man_ID = w.ID) AND pb.PID <>" + id;
+                let options = {
+                    uri: 'http://localhost:9000/query/' + encodeURI(query),
+                    headers: {
+                        'User-Agent': 'Request-Promise'
+                    },
+                    json: true // Automatically parses the JSON string in the response 
+                };
+                let self = this;
+                request(options)
+                    .then(function (body) {
+                        console.log(body);
+                        self.setState({
+                            managers: body.rows
+                        });
+                    })
+                    .catch(function (err) {
+                        // API call failed... 
+                        console.error(err);
+                    });
+
+                let query2 = "SELECT pb.PID as ProjectId, pb.NAME as Project, w.ID as WorkerID, w.NAME as Name, pe.Role as ROLE from Worker w, ProjectAssignedToEmployee pe, ProjectBudget pb WHERE (pe.PID = pb.PID AND pe.emp_ID = w.ID)  AND pb.PID <>" + id
+                let options2 = {
+                    uri: 'http://localhost:9000/query/' + encodeURI(query2),
+                    headers: {
+                        'User-Agent': 'Request-Promise'
+                    },
+                    json: true // Automatically parses the JSON string in the response 
+                };
+                request(options2)
+                    .then(function (body2) {
+                        console.log(body2);
+                        self.setState({
+                            employees: body2.rows
+                        });
+                    })
+                    .catch(function (err2) {
+                        // API call failed... 
+                        console.error(err2);
+                    });
+            }
+            else {
+                let query = "SELECT m.man_ID as ManagerID, w.NAME as Name from Manager m, Worker w WHERE m.man_ID = w.ID AND m.man_ID NOT IN (select man_ID as ID from ProjectManager)";
+                let options = {
+                    uri: 'http://localhost:9000/query/' + encodeURI(query),
+                    headers: {
+                        'User-Agent': 'Request-Promise'
+                    },
+                    json: true // Automatically parses the JSON string in the response 
+                };
+                request(options)
+                    .then(function (body) {
+                        console.log(body);
+                        self.setState({
+                            managers: body.rows
+                        });
+                    })
+                    .catch(function (err) {
+                        // API call failed... 
+                        console.error(err);
+                    });
+
+                let query2 = "SELECT e.emp_ID as EmployeeID, w.NAME as Name from Employee e, Worker w WHERE e.emp_ID = w.ID AND e.emp_ID NOT IN (select emp_ID as ID from ProjectAssignedToEmployee)";
+                let options2 = {
+                    uri: 'http://localhost:9000/query/' + encodeURI(query2),
+                    headers: {
+                        'User-Agent': 'Request-Promise'
+                    },
+                    json: true // Automatically parses the JSON string in the response 
+                };
+                request(options2)
+                    .then(function (body) {
+                        console.log(body);
+                        self.setState({
+                            employees: body.rows
+                        });
+                    })
+                    .catch(function (err) {
+                        // API call failed... 
+                        console.error(err);
+                    });
+            }
         }
     }
 
