@@ -5,6 +5,7 @@ import { Grid, Row, Modal, Col, ListGroup, ControlLabel, FormControl, Button, Li
 import JsonTable from 'react-json-table';
 import ModalOpen from '../Modal'
 import NewWorkerForm from './newWorkerForm'
+import toastr from 'toastr';
 
 const queryString = require('query-string');
 
@@ -51,9 +52,11 @@ export default class ViewWorkers extends Component {
                 self.setState({
                     rows: body.rows
                 });
+                toastr.success("Entries loaded successfully!");
             })
             .catch(function (err) {
                 // API call failed...
+                toastr.error("Failed to load entries...");
                 console.error(err);
             });
     }
@@ -113,9 +116,11 @@ export default class ViewWorkers extends Component {
                 self.setState({
                     rows: body.rows
                 });
+                toastr.success("Search success!");
             })
             .catch(function (err) {
                 // API call failed...
+                toastr.error("Search failed...");
                 console.error(err);
             });
     }
@@ -149,7 +154,7 @@ export default class ViewWorkers extends Component {
             let set = "w.phonenumber='" + phone + "'";
             update = update ? update + ", " + set : set;
         }
-        if (!update) { return (alert("No changes to update!")); }
+        if (!update) { return (toastr.warning("No changes to update...")); }
 
         let query = "UPDATE worker w SET " + update + " WHERE w.id=" + id;
         let self = this;
@@ -163,10 +168,12 @@ export default class ViewWorkers extends Component {
         request(options)
             .then(function (body) {
                 console.log(body);
+                toastr.success("Update success!");
                 self.doQuery();
                 self.close();
             })
             .catch(function (err) {
+                toastr.error("Update failed...");
                 console.error(err);
             });
     }
@@ -187,10 +194,12 @@ export default class ViewWorkers extends Component {
         request(options)
             .then(function (body) {
                 console.log(body);
+                toastr.success("Delete success!");
                 self.doQuery();
                 self.close();
             })
             .catch(function (err) {
+                toastr.error("Delete failed...");
                 console.error(err);
             });
     }

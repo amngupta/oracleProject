@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 let request = require('request-promise-native');
 import { ListGroup, ListGroupItem } from 'react-bootstrap';
 let moment = require('moment');
+import toastr from 'toastr';
 
 export default class NewExpenditureForm extends Component {
 
@@ -22,7 +23,7 @@ export default class NewExpenditureForm extends Component {
         let amt = this.eamount.value || null;
         let desc = this.edescription.value || null;
 
-        if (id === null || type === null || amt === null || desc === null) { return; }
+        if (id === null || type === null || amt === null || desc === null) { return (toastr.warning("Please fill in all the boxes!")); }
         let query = "SELECT MAX(e.eid) FROM expenditure e";
         let options = {
             uri: 'http://localhost:9000/query/' + encodeURI(query),
@@ -32,7 +33,7 @@ export default class NewExpenditureForm extends Component {
             json: true
         };
         let maxID;
-        let wid
+        let wid;
         request(options)
             .then(function (body) {
                 maxID = body.rows[0]["MAX(E.EID)"] + 1;
@@ -62,9 +63,10 @@ export default class NewExpenditureForm extends Component {
                 return request(options)
             })
             .then(function (body) {
-                alert("Added " + type + " expendture!");
+                toastr.success("Added " + type + " expendture!");
             })
             .catch(function (err) {
+                toastr.error("Failed to add...");
                 console.error(err);
             });
     }

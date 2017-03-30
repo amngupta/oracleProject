@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 let request = require('request-promise-native');
 import { ListGroup, ListGroupItem } from 'react-bootstrap';
+import toastr from 'toastr';
 
 export default class NewProjectForm extends Component {
 
@@ -41,11 +42,11 @@ export default class NewProjectForm extends Component {
                 };
                 request(options)
                     .then(function (body) {
-                        alert("Added " + name + " project!");
+                        toastr.success("Added " + name + " project!");
                     })
                     .catch(function (err) {
                         console.error(err);
-                        alert("Failed to add project.")
+                        toastr.error("Failed to add project.");
                     });
             })
             .catch(function (err) {

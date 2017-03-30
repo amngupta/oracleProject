@@ -4,6 +4,7 @@ import { Grid, Row, Col, ListGroup, ControlLabel, FormControl, Button, ListGroup
 import JsonTable from 'react-json-table';
 import ModalOpen from '../Modal'
 import NewProjectForm from './newProjectForm'
+import toastr from 'toastr';
 
 
 
@@ -54,10 +55,12 @@ export default class ViewWorkerProject extends Component {
                 self.setState({
                     employees: body2.rows
                 });
+                toastr.success("Entries loaded successfully!");
             })
             .catch(function (err2) {
                 // API call failed... 
                 console.error(err2);
+                toastr.warning("Entries failed to load...");
             });
     }
 
@@ -105,9 +108,11 @@ export default class ViewWorkerProject extends Component {
                         self.setState({
                             employees: body2.rows
                         });
+                        toastr.success("Search success!");
                     })
                     .catch(function (err2) {
-                        // API call failed... 
+                        // API call failed...
+                        toastr.error("Search failed...");
                         console.error(err2);
                     });
             } else {
@@ -145,9 +150,11 @@ export default class ViewWorkerProject extends Component {
                         self.setState({
                             employees: body.rows
                         });
+                        toastr.success("Search success!");
                     })
                     .catch(function (err) {
-                        // API call failed... 
+                        // API call failed...
+                        toastr.error("Search failed...");
                         console.error(err);
                     });
             }
@@ -189,10 +196,12 @@ export default class ViewWorkerProject extends Component {
                         self.setState({
                             employees: body2.rows
                         });
+                        toastr.success("Search success!");
                     })
                     .catch(function (err2) {
                         // API call failed... 
                         console.error(err2);
+                        toastr.error("Search failed...");
                     });
             }
             else {
@@ -230,10 +239,12 @@ export default class ViewWorkerProject extends Component {
                         self.setState({
                             employees: body.rows
                         });
+                        toastr.success("Search success!");
                     })
                     .catch(function (err) {
                         // API call failed... 
                         console.error(err);
+                        toastr.error("Search failed...");
                     });
             }
         }
