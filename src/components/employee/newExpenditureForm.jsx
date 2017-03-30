@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 let request = require('request-promise-native');
-import { ListGroup, ControlLabel, FormControl, ListGroupItem } from 'react-bootstrap';
+import { ListGroup, ListGroupItem } from 'react-bootstrap';
+var dateFormat = require('dateformat');
 
 export default class NewExpenditureForm extends Component {
 
@@ -16,11 +17,13 @@ export default class NewExpenditureForm extends Component {
 
     doQuery(e) {
         e.preventDefault();
-        let table = this.wtype.value;
-        let name = this.wname.value || null;
-        let phone = this.wphone.value || null;
-        if (name === null || phone === null) { return; }
-        let query = "SELECT MAX(w.id) FROM worker w";
+        let id = this.pid.value || null;
+        let type = this.etype.value || null;
+        let amt = this.eamount.value || null;
+        let desc = this.edescription.value || null;
+
+        if (id === null || type === null || amt === null || desc === null) { return; }
+        let query = "SELECT MAX(e.eid) FROM expenditure e";
         let options = {
             uri: 'http://localhost:9000/query/' + encodeURI(query),
             headers: {
@@ -30,8 +33,12 @@ export default class NewExpenditureForm extends Component {
         };
         request(options)
             .then(function (body) {
-                let maxID = body.rows[0]["MAX(W.ID)"] + 1;
-                query = "INSERT INTO Worker VALUES (" + maxID + ", '" + name + "', '" + phone + "')";
+                let maxID = body.rows[0]["MAX(E.EID)"] + 1;
+                let wid = 11; // TODO: should be passed in...
+                let date = "to_date('" + dateFormat(new Date(), "yyyy-mm-dd HH:MM:ss") + "', 'YYYY-MM-DD HH24:MI:SS')";
+                console.log(date);
+
+                query = "INSERT INTO Expenditure VALUES (" + maxID + ", '" + type + "', '" + desc + "', " + date + ", " + amt + ")";
                 let options = {
                     uri: 'http://localhost:9000/query/' + encodeURI(query),
                     headers: {
@@ -41,19 +48,20 @@ export default class NewExpenditureForm extends Component {
                 };
                 request(options)
                     .then(function (body) {
-                        switch (table) {
-                            case "employee":
-                                query = "INSERT INTO employee VALUES (" + maxID + ", 11)";
-                                break;
-                            case "manager":
-                                query = "INSERT INTO manager VALUES (" + maxID + ", 1)";
-                                break;
-                            case "president":
-                                query = "INSERT INTO president VALUES (" + maxID + ")";
-                                break;
-                            default:
-                                break;
-                        }
+                        // switch (table) {
+                        //     case "employee":
+                        //         query = "INSERT INTO employee VALUES (" + maxID + ", 11)";
+                        //         break;
+                        //     case "manager":
+                        //         query = "INSERT INTO manager VALUES (" + maxID + ", 1)";
+                        //         break;
+                        //     case "president":
+                        //         query = "INSERT INTO president VALUES (" + maxID + ")";
+                        //         break;
+                        //     default:
+                        //         break;
+                        // }
+                        query = "INSERT INTO ExpenditureManager VALUES (" + maxID + ", " + id + ", " + wid + ")";
                         let options = {
                             uri: 'http://localhost:9000/query/' + encodeURI(query),
                             headers: {
@@ -63,7 +71,7 @@ export default class NewExpenditureForm extends Component {
                         };
                         request(options)
                             .then(function (body) {
-                                alert("Added " + table + "!");
+                                alert("Added " + type + " expendture!");
                             })
                             .catch(function (err) {
                                 console.error(err);
@@ -71,7 +79,6 @@ export default class NewExpenditureForm extends Component {
                     })
                     .catch(function (err) {
                         console.error(err);
-                        alert("Error; please try another Phone Number.")
                     });
             })
             .catch(function (err) {
@@ -90,7 +97,7 @@ export default class NewExpenditureForm extends Component {
                                     <div className="form-group col-sm-6">
                                         <label className="control-label text-semibold col-sm-4 col-md-3">Project Id</label>
                                         <div className="col-sm-8 col-md-9">
-                                            <input type='number' name='name' ref={ref => this.pId = ref} placeholder='Project Id' className="form-control" />
+                                            <input type='number' name='name' ref={ref => this.pid = ref} placeholder='Project Id' className="form-control" />
                                         </div>
                                     </div>
                                     <div className="form-group col-sm-6">
