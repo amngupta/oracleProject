@@ -17,7 +17,7 @@ import NewExpenditureForm from './components/employee/newExpenditureForm';
 const Routes = (
     <Router>
         <div>
-            <Navbar collapseOnSelect>
+            <Navbar collapseOnSelect inverse>
                 <Navbar.Header>
                     <Navbar.Brand>
                         <Link to="/">
@@ -29,15 +29,16 @@ const Routes = (
                 <Navbar.Collapse>
                     <Nav>
                         <NavDropdown eventKey={1} title="President" id="basic-nav-dropdown">
-                            <MenuItem eventKey={1.1}><NavLink to="/president/project">Project</NavLink></MenuItem>
-                            <MenuItem eventKey={1.2}><NavLink to="/president/workers">Workers</NavLink></MenuItem>
-                            <MenuItem eventKey={1.2}><NavLink to="/president/workerProjects">Employee Projects</NavLink></MenuItem>
+                            <li><Link to="/president/project">Project</Link></li>
+                            <li><Link to="/president/workers">Workers</Link></li>
+                            <li><Link to="/president/workerProjects">Employee Projects</Link></li>
                         </NavDropdown>
                         <NavDropdown eventKey={2} title="Manager" id="basic-nav-dropdown">
-                            <MenuItem eventKey={2.1}><NavLink to="/manager/expenditure">Expenditure Reports</NavLink></MenuItem>
+                            <li><Link to="/manager/expenditure">Expenditure Reports</Link></li>
+                            <li><Link to="/employee/add-expenditure">Add Expenditure</Link></li>
                         </NavDropdown>
                         <NavDropdown eventKey={3} title="Employee" id="basic-nav-dropdown">
-                            <MenuItem eventKey={3.1}><NavLink to="/employee/add-expenditure">Add Expenditure</NavLink></MenuItem>
+                            <li><Link to="/employee/add-expenditure">Add Expenditure</Link></li>
                         </NavDropdown>
                     </Nav>
                 </Navbar.Collapse>
