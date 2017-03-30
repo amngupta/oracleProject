@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 let request = require('request-promise-native');
 import { ListGroup, ListGroupItem } from 'react-bootstrap';
-var dateFormat = require('dateformat');
+let moment = require('moment');
 
 export default class NewExpenditureForm extends Component {
 
@@ -35,7 +35,7 @@ export default class NewExpenditureForm extends Component {
             .then(function (body) {
                 let maxID = body.rows[0]["MAX(E.EID)"] + 1;
                 let wid = 11; // TODO: should be passed in...
-                let date = "to_date('" + dateFormat(new Date(), "yyyy-mm-dd HH:MM:ss") + "', 'YYYY-MM-DD HH24:MI:SS')";
+                let date = "to_date('" + moment().format("YYYY-MM-DD HH:MM:ss") + "', 'YYYY-MM-DD HH24:MI:SS')";
                 console.log(date);
 
                 query = "INSERT INTO Expenditure VALUES (" + maxID + ", '" + type + "', '" + desc + "', " + date + ", " + amt + ")";
@@ -46,40 +46,34 @@ export default class NewExpenditureForm extends Component {
                     },
                     json: true
                 };
-                request(options)
-                    .then(function (body) {
-                        // switch (table) {
-                        //     case "employee":
-                        //         query = "INSERT INTO employee VALUES (" + maxID + ", 11)";
-                        //         break;
-                        //     case "manager":
-                        //         query = "INSERT INTO manager VALUES (" + maxID + ", 1)";
-                        //         break;
-                        //     case "president":
-                        //         query = "INSERT INTO president VALUES (" + maxID + ")";
-                        //         break;
-                        //     default:
-                        //         break;
-                        // }
-                        query = "INSERT INTO ExpenditureManager VALUES (" + maxID + ", " + id + ", " + wid + ")";
-                        let options = {
-                            uri: 'http://localhost:9000/query/' + encodeURI(query),
-                            headers: {
-                                'User-Agent': 'Request-Promise'
-                            },
-                            json: true
-                        };
-                        request(options)
-                            .then(function (body) {
-                                alert("Added " + type + " expendture!");
-                            })
-                            .catch(function (err) {
-                                console.error(err);
-                            });
-                    })
-                    .catch(function (err) {
-                        console.error(err);
-                    });
+                return request(options)
+            })
+            .then(function (body) {
+                // switch (table) {
+                //     case "employee":
+                //         query = "INSERT INTO employee VALUES (" + maxID + ", 11)";
+                //         break;
+                //     case "manager":
+                //         query = "INSERT INTO manager VALUES (" + maxID + ", 1)";
+                //         break;
+                //     case "president":
+                //         query = "INSERT INTO president VALUES (" + maxID + ")";
+                //         break;
+                //     default:
+                //         break;
+                // }
+                query = "INSERT INTO ExpenditureManager VALUES (" + maxID + ", " + id + ", " + wid + ")";
+                let options = {
+                    uri: 'http://localhost:9000/query/' + encodeURI(query),
+                    headers: {
+                        'User-Agent': 'Request-Promise'
+                    },
+                    json: true
+                };
+                return request(options)
+            })
+            .then(function (body) {
+                alert("Added " + type + " expendture!");
             })
             .catch(function (err) {
                 console.error(err);

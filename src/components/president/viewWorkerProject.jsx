@@ -65,27 +65,51 @@ export default class ViewWorkerProject extends Component {
     doQuery(e) {
         e.preventDefault();
         let id = this.pid.value || null;
-        let workerType = this.wtype.value || null;
+        let queryType = this.queryType.value || null;
         let query = {};
         let self = this;
-        let options = {
-            uri: 'http://localhost:9000/query/' + encodeURI(query),
-            headers: {
-                'User-Agent': 'Request-Promise'
-            },
-            json: true // Automatically parses the JSON string in the response 
-        };
-        request(options)
-            .then(function (body) {
-                console.log(body);
-                self.setState({
-                    rows: body.rows
+        if (queryType && queryType == "IN") {
+            let query = "SELECT pb.PID as ProjectId, pb.NAME as Project, w.ID as WorkerID, w.NAME as Name from Worker w, ProjectManager pm, ProjectBudget pb WHERE (pm.PID = pb.PID AND pm.man_ID = w.ID) AND pb.PID =" + id;
+            let options = {
+                uri: 'http://localhost:9000/query/' + encodeURI(query),
+                headers: {
+                    'User-Agent': 'Request-Promise'
+                },
+                json: true // Automatically parses the JSON string in the response 
+            };
+            let self = this;
+            request(options)
+                .then(function (body) {
+                    console.log(body);
+                    self.setState({
+                        managers: body.rows
+                    });
+                })
+                .catch(function (err) {
+                    // API call failed... 
+                    console.error(err);
                 });
-            })
-            .catch(function (err) {
-                // API call failed... 
-                console.error(err);
-            });
+
+            let query2 = "SELECT pb.PID as ProjectId, pb.NAME as Project, w.ID as WorkerID, w.NAME as Name, pe.Role as ROLE from Worker w, ProjectAssignedToEmployee pe, ProjectBudget pb WHERE (pe.PID = pb.PID AND pe.emp_ID = w.ID)  AND pb.PID =" + id
+            let options2 = {
+                uri: 'http://localhost:9000/query/' + encodeURI(query2),
+                headers: {
+                    'User-Agent': 'Request-Promise'
+                },
+                json: true // Automatically parses the JSON string in the response 
+            };
+            request(options2)
+                .then(function (body2) {
+                    console.log(body2);
+                    self.setState({
+                        employees: body2.rows
+                    });
+                })
+                .catch(function (err2) {
+                    // API call failed... 
+                    console.error(err2);
+                });
+        }
     }
 
 
@@ -106,11 +130,9 @@ export default class ViewWorkerProject extends Component {
                                     <div className="form-group col-sm-6">
                                         <ControlLabel className="col-sm-4 col-md-3">Type</ControlLabel>
                                         <div className="col-sm-8 col-md-9">
-                                            <FormControl componentClass="select" inputRef={ref => this.wtype = ref} placeholder="select">
-                                                <option value="worker">--</option>
-                                                <option value="president">President</option>
-                                                <option value="manager">Manager</option>
-                                                <option value="employee">Employee</option>
+                                            <FormControl componentClass="select" inputRef={ref => this.queryType = ref} placeholder="select">
+                                                <option value="IN">In Project</option>
+                                                <option value="NOT">Not in Project</option>
                                             </FormControl>
                                         </div>
                                     </div>
