@@ -47,6 +47,10 @@ export default class QueryBox extends Component {
     render() {
         return (
             <Grid fluid={true}>
+                <Col xs={12}>
+                    <h1>Welcome to Scrooge McDuck Project Management </h1>
+                    <h3>Use queryBox below or use the interface...</h3>
+                </Col>
                 <Col xs={10}>
                     <textarea ref={ref => this.queryBox = ref} className="App-intro">
 

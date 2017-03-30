@@ -21,7 +21,7 @@ const Routes = (
                 <Navbar.Header>
                     <Navbar.Brand>
                         <Link to="/">
-                            McDuck Project
+                            Scrooge McDuck
                         </Link>
                     </Navbar.Brand>
                     <Navbar.Toggle />
