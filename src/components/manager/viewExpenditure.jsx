@@ -33,7 +33,7 @@ export default class ViewExpenditures extends Component {
                 self.setState({
                     rows: body.rows
                 });
-                query = "SELECT COUNT(*) FROM ProjectBudget";
+                query = "SELECT COUNT(*) FROM Expenditure";
                 options = {
                     uri: 'http://localhost:9000/query/' + encodeURI(query),
                     headers: {
@@ -64,16 +64,31 @@ export default class ViewExpenditures extends Component {
     doQuery(e) {
         e.preventDefault();
         let id = this.pid.value || null;
-        let name = this.pname.value || null;
-        let aggr = this.waggr.value || null;
-        let querySuffix = " FROM ProjectBudget p"
+
+
+        let desc = this.desc.value || null;
+        let type = this.type.value || null;
+        let amt = this.amt.value || null;
+        let rel = this.relation.value || null;
+        let group = this.group.value || null;
+        let aggr = this.aggr.value || null;
+
         let filter = [];
-        if (id) { filter.push("p.pid=" + id); }
-        if (name) { filter.push("LOWER(p.name) LIKE LOWER('%" + name + "%')"); }
+        let querySuffix = " FROM Expenditure e";
+        if (desc) { filter.push("LOWER(e.description) LIKE LOWER('%" + desc + "%')"); }
+        if (type) { filter.push("LOWER(e.type) LIKE LOWER('%" + type + "%')"); }
+        if (amt && rel) { filter.push("e.amount" + rel + amt); }
+        if (id) {
+            let q = "(e.eid IN (SELECT ew.eid FROM ExpenditureWorker ew WHERE ew.pid=" + id + " AND e.eid=ew.eid)" +
+                "OR e.eid IN (SELECT em.eid FROM ExpenditureManager em WHERE em.pid=" + id + " AND e.eid=em.eid))";
+            filter.push(q);
+        }
+
         if (filter.length !== 0) { querySuffix += " WHERE " + filter.join(" AND "); }
+
         let self = this;
         let options = {
-            uri: 'http://localhost:9000/query/' + encodeURI("SELECT *" + querySuffix),
+            uri: 'http://localhost:9000/query/' + encodeURI("SELECT DISTINCT *" + querySuffix),
             headers: {
                 'User-Agent': 'Request-Promise'
             },
@@ -94,13 +109,21 @@ export default class ViewExpenditures extends Component {
                     case "MAX":
                     case "MIN":
                     case "SUM":
-                        aggrQuery = aggr + "(P.BUDGET)";
+                        aggrQuery = aggr + "(E.AMOUNT)";
                         break;
                     default:
                         break;
                 }
+                let groupByCol = "";
+                let queryGroupBy = "";
+                if (group && group !== "NONE") {
+                    if (group === "TYPE") {
+                        groupByCol = "e.type, ";
+                        queryGroupBy = " GROUP BY e.type";
+                    }
+                }
                 let options = {
-                    uri: 'http://localhost:9000/query/' + encodeURI("SELECT " + aggrQuery + querySuffix),
+                    uri: 'http://localhost:9000/query/' + encodeURI("SELECT DISTINCT " + groupByCol + aggrQuery + querySuffix + queryGroupBy),
                     headers: {
                         'User-Agent': 'Request-Promise'
                     },
@@ -157,14 +180,54 @@ export default class ViewExpenditures extends Component {
                                         </div>
                                     </div>
                                     <div className="form-group col-sm-6">
-                                        <ControlLabel className="col-sm-4 col-md-3">Aggregation:</ControlLabel>
+                                        <label className="control-label text-semibold col-sm-4 col-md-3">Description</label>
                                         <div className="col-sm-8 col-md-9">
-                                            <FormControl componentClass="select" inputRef={ref => this.waggr = ref}>
+                                            <input type='text' name='name' ref={ref => this.desc = ref} placeholder='Description' className="form-control" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="row">
+                                    <div className="form-group col-sm-5">
+                                        <label className="control-label text-semibold col-sm-4 col-md-3">Type</label>
+                                        <div className="col-sm-8 col-md-9">
+                                            <input type='text' name='name' ref={ref => this.type = ref} placeholder='Type' className="form-control" />
+                                        </div>
+                                    </div>
+                                    <div className="form-group col-sm-4">
+                                        <label className="control-label text-semibold col-sm-4 col-md-5">Amount</label>
+                                        <div className="col-sm-5 col-md-6">
+                                            <input type='number' name='name' ref={ref => this.amt = ref} placeholder='Amount' className="form-control" />
+                                        </div>
+                                    </div>
+                                    <div className="form-group col-sm-3">
+                                        <div className="col-sm-5 col-md-5">
+                                            <FormControl componentClass="select" inputRef={ref => this.relation = ref}>
+                                                <option value="=">{"="}</option>
+                                                <option value=">=">{">="}</option>
+                                                <option value="<=">{"<="}</option>
+                                            </FormControl>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="row">
+                                    <div className="form-group col-sm-6">
+                                        <ControlLabel className="col-sm-4 col-md-3">Group By</ControlLabel>
+                                        <div className="col-sm-8 col-md-9">
+                                            <FormControl componentClass="select" inputRef={ref => this.group = ref}>
+                                                <option value="NONE">None</option>
+                                                <option value="TYPE">Type</option>
+                                            </FormControl>
+                                        </div>
+                                    </div>
+                                    <div className="form-group col-sm-6">
+                                        <ControlLabel className="col-sm-4 col-md-3">Aggregation</ControlLabel>
+                                        <div className="col-sm-8 col-md-9">
+                                            <FormControl componentClass="select" inputRef={ref => this.aggr = ref}>
                                                 <option value="COUNT">Count</option>
-                                                <option value="AVG">Average Budget</option>
-                                                <option value="MAX">Max Budget</option>
-                                                <option value="MIN">Min Budget</option>
-                                                <option value="SUM">Sum of Budgets</option>
+                                                <option value="AVG">Average Amount</option>
+                                                <option value="MAX">Max Amount</option>
+                                                <option value="MIN">Min Amount</option>
+                                                <option value="SUM">Sum of Amounts</option>
                                             </FormControl>
                                         </div>
                                     </div>
