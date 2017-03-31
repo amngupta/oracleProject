@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 let request = require('request-promise-native');
 import { ListGroup, ControlLabel, FormControl, ListGroupItem } from 'react-bootstrap';
+import toastr from 'toastr';
 
 export default class NewWorkerForm extends Component {
 
@@ -63,7 +64,7 @@ export default class NewWorkerForm extends Component {
                         };
                         request(options)
                             .then(function (body) {
-                                alert("Added " + table + "!");
+                                toastr.success("Added " + table + "!");
                             })
                             .catch(function (err) {
                                 console.error(err);
@@ -71,7 +72,7 @@ export default class NewWorkerForm extends Component {
                     })
                     .catch(function (err) {
                         console.error(err);
-                        alert("Error; please try another Phone Number.")
+                        toastr.error("Error; please try different fields.")
                     });
             })
             .catch(function (err) {

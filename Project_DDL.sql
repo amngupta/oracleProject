@@ -15,7 +15,8 @@ CREATE TABLE Worker (
 	Name		VARCHAR2(25),
 	PhoneNumber	VARCHAR2(13),
 	PRIMARY KEY (ID),
-	UNIQUE (PhoneNumber)
+	UNIQUE (PhoneNumber),
+	CONSTRAINT chk_phone CHECK (REGEXP_LIKE(PhoneNumber,'^\d{3}-\d{3}-\d{4}$','i'))
 );
 
 INSERT INTO Worker VALUES (1, 'Jack Sparrow', '113-555-8789');

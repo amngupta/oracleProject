@@ -5,6 +5,8 @@ import JsonTable from 'react-json-table';
 import ModalOpen from '../Modal';
 import Moment from 'react-moment';
 import NewExpenditureForm from '../employee/newExpenditureForm';
+import toastr from 'toastr';
+
 export default class ViewExpenditures extends Component {
 
     constructor(props) {
@@ -51,8 +53,10 @@ export default class ViewExpenditures extends Component {
                         self.setState({
                             aggregation: body.rows
                         });
+                        toastr.success("Entries loaded successfully!");
                     })
                     .catch(function (err) {
+                        toastr.error("Failed to load entries...");
                         console.error(err);
                     });
             })
@@ -139,8 +143,10 @@ export default class ViewExpenditures extends Component {
                         self.setState({
                             aggregation: body.rows
                         });
+                        toastr.success("Search success!");
                     })
                     .catch(function (err) {
+                        toastr.error("Search failed...");
                         console.error(err);
                     });
             })

@@ -5,6 +5,7 @@ import { NavLink } from 'react-router-dom'
 import JsonTable from 'react-json-table';
 import ModalOpen from '../Modal'
 import NewProjectForm from './newProjectForm'
+import toastr from 'toastr';
 
 
 
@@ -58,12 +59,15 @@ export default class ViewProjects extends Component {
                     body.rows[i]["COUNT"] = body.rows[i]["COUNT(*)"];
                     delete body.rows[i]["COUNT(*)"];
                 }
+                toastr.success("Entries loaded successfully!");
+
                 self.setState({
                     aggregation: body.rows
                 });
             })
             .catch(function (err) {
                 console.error(err);
+                toastr.error("Failed to load entries...");
             });
     }
 
@@ -87,7 +91,7 @@ export default class ViewProjects extends Component {
         let id = this.pid.value || null;
         let name = this.pname.value || null;
         let aggr = this.waggr.value || null;
-        let querySuffix = " FROM ProjectBudget p"
+        let querySuffix = " FROM ProjectBudget p";
         let filter = [];
         if (id) { filter.push("p.pid=" + id); }
         if (name) { filter.push("LOWER(p.name) LIKE LOWER('%" + name + "%')"); }
@@ -137,6 +141,7 @@ export default class ViewProjects extends Component {
                         self.setState({
                             aggregation: body.rows
                         });
+                        toastr.success("Search success!");
                     })
                     .catch(function (err) {
                         console.error(err);
@@ -144,6 +149,7 @@ export default class ViewProjects extends Component {
             })
             .catch(function (err) {
                 console.error(err);
+                toastr.error("Search failed...");
             });
     }
 
@@ -166,7 +172,7 @@ export default class ViewProjects extends Component {
             let set = "p.description='" + desc + "'";
             update = update ? update + ", " + set : set;
         }
-        if (!update) { return (alert("No changes to update!")); }
+        if (!update) { return (toastr.warning("No changes to update...")); }
 
         let query = "UPDATE projectbudget p SET " + update + " WHERE p.pid=" + pid;
         let self = this;
@@ -180,10 +186,12 @@ export default class ViewProjects extends Component {
         request(options)
             .then(function (body) {
                 console.log(body);
+                toastr.success("Update success!");
                 self.doQuery();
                 self.close();
             })
             .catch(function (err) {
+                toastr.error("Update failed...");
                 console.error(err);
             });
     }

@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 let request = require('request-promise-native');
 import { Button, Col, Grid } from 'react-bootstrap';
 import JsonTable from 'react-json-table';
+import toastr from 'toastr';
 
 export default class QueryBox extends Component {
 
@@ -29,6 +30,7 @@ export default class QueryBox extends Component {
         request(options)
             .then(function (body) {
                 console.log(body);
+                toastr.success("Query success!");
                 let columns = [];
                 body.metaData.forEach((mD) => {
                     columns.push(mD.name);
@@ -39,7 +41,8 @@ export default class QueryBox extends Component {
                 // console.log(self.state.rows);
             })
             .catch(function (err) {
-                // API call failed... 
+                // API call failed...
+                toastr.error("Query failed...");
                 console.error(err);
             });
     }
