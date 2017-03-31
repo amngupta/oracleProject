@@ -50,20 +50,17 @@ export default class ViewProjects extends Component {
                     },
                     json: true
                 };
-                request(options)
-                    .then(function (body) {
-                        console.log(body);
-                        for (let i = 0; i < body.rows.length; i++) {
-                            body.rows[i]["COUNT"] = body.rows[i]["COUNT(*)"];
-                            delete body.rows[i]["COUNT(*)"];
-                        }
-                        self.setState({
-                            aggregation: body.rows
-                        });
-                    })
-                    .catch(function (err) {
-                        console.error(err);
-                    });
+                return request(options)
+            })
+            .then(function (body) {
+                console.log(body);
+                for (let i = 0; i < body.rows.length; i++) {
+                    body.rows[i]["COUNT"] = body.rows[i]["COUNT(*)"];
+                    delete body.rows[i]["COUNT(*)"];
+                }
+                self.setState({
+                    aggregation: body.rows
+                });
             })
             .catch(function (err) {
                 console.error(err);
@@ -318,7 +315,7 @@ export default class ViewProjects extends Component {
                     </Modal.Body>
                     <Modal.Footer>
                         <Button bsStyle="info" onClick={this.onClickView}>
-                                View project workers
+                            View project workers
                         </Button> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                         <Button bsStyle="success" onClick={this.onClickUpdate}>
                             Update
