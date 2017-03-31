@@ -97,7 +97,7 @@ export default class NewWorkerForm extends Component {
                                     <div className="form-group col-sm-6">
                                         <label className="control-label text-semibold col-sm-4 col-md-3">Phone Number</label>
                                         <div className="col-sm-8 col-md-9">
-                                            <input type='text' name='name' ref={ref => this.wphone = ref} placeholder='Phone' className="form-control" />
+                                            <input type='text' name='name' ref={ref => this.wphone = ref} placeholder='111-222-3333' className="form-control" />
                                         </div>
                                     </div>
                                     <div className="form-group col-sm-6">
