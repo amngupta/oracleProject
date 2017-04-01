@@ -10,7 +10,7 @@ var connection;
 
 let initString = () => {
   return new Promise((fulfill, reject) => {
-    fs.readFile("Project_DDL.txt", 'utf-8', (err, data) => {
+    fs.readFile("Project_DDL.sql", 'utf-8', (err, data) => {
       if (!err) {
         data.toString('ascii', 0, data.length);
         let commands = data.split(";");
