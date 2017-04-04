@@ -5,11 +5,12 @@
   "dependencies": {
     "express": "^4.15.2",
     "fs": "^0.0.1-security",
+    "jquery": "^3.2.1",
     "moment": "^2.18.1",
     "moment-timezone": "^0.5.11",
     "morgan": "^1.8.1",
     "oracledb": "^1.12.2",
-    "queryString": "^4.3.2",
+    "query-string": "^4.3.2",
     "react": "^15.4.2",
     "react-bootstrap": "^0.30.8",
     "react-dom": "^15.4.2",
@@ -19,8 +20,7 @@
     "react-router-dom": "^4.0.0",
     "request": "^2.81.0",
     "request-promise-native": "^1.0.3",
-    "toastr": "^2.1.2",
-    "jquery": "^3.2.1"
+    "toastr": "^2.1.2"
   },
   "devDependencies": {
     "babel-cli": "^6.18.0",
